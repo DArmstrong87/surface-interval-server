@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from surfaceintervalapi.models import Dive, Diver
+from surfaceintervalapi.models import Diver
 
 
 class UserSerializer (serializers.ModelSerializer):
@@ -18,5 +18,10 @@ class DiverSerializer (serializers.ModelSerializer):
         model = Diver
         fields = ('id',
                   'user',
-                  'units')
+                  'units',
+                  'total_dives',
+                  'most_recent_dive',
+                  'deepest_dive',
+                  'longest_dive'
+                  )
         depth=1

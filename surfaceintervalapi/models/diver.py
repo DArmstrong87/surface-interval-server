@@ -24,14 +24,14 @@ class Diver(models.Model):
     
     @property
     def deepest_dive(self):
-        dive = Dive.objects.filter(diver=self).values('depth').annotate(max_depth=models.Max('depth')).order_by('max_depth').first()
+        dive = Dive.objects.only('depth').filter(diver=self).annotate(max_depth=models.Max('depth')).order_by('max_depth').first()
         return dive.depth
 
 
     @property
     def longest_dive(self):
-        dive = Dive.objects.filter(diver=self).values('time').annotate(max_time=models.Max('time')).order_by('max_time').first()
-        return dive.depth
+        dive = Dive.objects.only('time').filter(diver=self).annotate(max_time=models.Max('time')).order_by('max_time').first()
+        return dive.time
 
     # most_logged_specialty
     # avg_air_consumption

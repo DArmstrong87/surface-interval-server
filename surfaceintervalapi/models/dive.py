@@ -1,5 +1,7 @@
 from django.db import models
 
+from surfaceintervalapi.models.favorite_dive import Favorite_Dive
+
 
 class Dive(models.Model):
     diver = models.ForeignKey('Diver', on_delete=models.CASCADE)
@@ -24,13 +26,17 @@ class Dive(models.Model):
         air_consumed = None
         if self.start_pressure is not None and self.end_pressure is not None and self.tank_vol is not None:
             units = self.diver.units
-            atm = 33 if units == 'Imperial' else 10
+            atm = 33 if units == 'imperial' else 10
             bar_atm = (self.depth/atm) + 1
             psi_consumed = self.start_pressure - self.end_pressure
             working_pressure = self.start_pressure
             air_consumed = (self.tank_vol * psi_consumed)/working_pressure/self.time/bar_atm
         
         return air_consumed
+    
+    @property
+    def favorite(self):
+        return True if Favorite_Dive.objects.filter(dive=self).exists() else False
     
     def __str__(self):
         return f'{self.pk} | {self.site} | {self.diver.user.first_name} {self.diver.user.last_name}'

@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Custom_Gear_Type(models.Model):
     diver = models.ForeignKey('Diver', on_delete=models.CASCADE)
     name = models.CharField(max_length=50)

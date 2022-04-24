@@ -1,6 +1,4 @@
 from django.db import models
-from django.forms import CharField
-
 
 
 class Certification_Card(models.Model):

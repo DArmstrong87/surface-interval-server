@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from surfaceintervalapi.models import Dive
 
+from surfaceintervalapi.models import Dive, Favorite_Dive
+from surfaceintervalapi.serializers.diver_serializer import DiverSerializer
 
 class DiveSerializer (serializers.ModelSerializer):
 
@@ -18,5 +19,14 @@ class DiveSerializer (serializers.ModelSerializer):
                 'start_pressure',
                 'end_pressure',
                 'tank_vol',
-                'air_consumption'
+                'air_consumption',
+                'favorite'
                 )
+        
+class FavoriteDiveSerializer (serializers.ModelSerializer):
+    dive = DiveSerializer()
+    diver = DiverSerializer
+
+    class Meta:
+        model = Favorite_Dive
+        fields = ('id', 'dive', 'diver')
