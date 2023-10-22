@@ -1,9 +1,11 @@
 from rest_framework import serializers
-from surfaceintervalapi.models import Custom_Specialty
+from surfaceintervalapi.models import CustomSpecialty
 
 
-class CustomSpecialtySerializer (serializers.ModelSerializer):
-
+class CustomSpecialtySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Custom_Specialty
-        fields = ('id','name',)
+        model = CustomSpecialty
+        fields = (
+            "id",
+            "name",
+        )

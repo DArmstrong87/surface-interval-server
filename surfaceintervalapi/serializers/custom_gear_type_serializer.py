@@ -1,9 +1,11 @@
 from rest_framework import serializers
-from surfaceintervalapi.models import Custom_Gear_Type
+from surfaceintervalapi.models import CustomGearType
 
 
-class CustomGearTypeSerializer (serializers.ModelSerializer):
-
+class CustomGearTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Custom_Gear_Type
-        fields = ('id','name',)
+        model = CustomGearType
+        fields = (
+            "id",
+            "name",
+        )
