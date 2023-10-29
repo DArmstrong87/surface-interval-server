@@ -1,10 +1,13 @@
 name: Linting and formatting
 
-on: [push]
+on:
+  push:
+    branches:
+      - '*'
 
 jobs:
   lint:
-    name: Linting with Ruff
+    name: Linting and formatting
     runs-on: ubuntu-latest
 
     steps:
@@ -19,5 +22,5 @@ jobs:
       - name: Run Ruff linting
         run: ruff .
 
-      - name: Run Ruff linting
+      - name: Run Black formatting check
         run: black . --check
