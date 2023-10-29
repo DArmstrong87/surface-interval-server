@@ -1,9 +1,11 @@
 from rest_framework import serializers
-from surfaceintervalapi.models import Dive_Specialty
+from surfaceintervalapi.models import DiveSpecialty
 
 
-class DiveSpecialtySerializer (serializers.ModelSerializer):
-
+class DiveSpecialtySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dive_Specialty
-        fields = ('id','name',)
+        model = DiveSpecialty
+        fields = (
+            "id",
+            "name",
+        )
