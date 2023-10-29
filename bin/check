@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
+
+
+echo "${green}Running linting check...${reset}"
+if ruff . ; then
+    echo "${green}Linting checks passed${reset}"
+else
+    echo "${red}Linting checks failed${reset}"
+fi
+echo "=====================
+"
+
+echo "${green}Running formatting check...${reset}"
+if black . --check ; then
+    echo "${green}Formatting checks passed${reset}"
+else
+    echo "${red}Formatting checks failed${reset}"
+fi
+echo "=====================
+"
+
+echo "${green}Running unit tests...${reset}"
+if python manage.py test; then
+    echo "${green}Unit tests passed${reset}"
+else
+    echo "${red}Unit tests failed${reset}"
+fi
