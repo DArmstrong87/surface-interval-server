@@ -4,6 +4,7 @@ select = ["E", "F", "W"]
 ignore = [
     "E501", # Ignore 'Line too long'
     "E722", # Ignore 'Do not use bare `except`'
+    "W605", # Invalid escape sequence
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
