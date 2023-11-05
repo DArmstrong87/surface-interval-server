@@ -29,7 +29,7 @@ class DiveView(ViewSet):
             diver = Diver.objects.get(user=request.auth.user)
         except Diver.DoesNotExist as ex:
             return Response({"error": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-    
+
         try:
             gear_set = GearSet.objects.get(diver=diver, pk=request.data["gear_set"])
         except:
