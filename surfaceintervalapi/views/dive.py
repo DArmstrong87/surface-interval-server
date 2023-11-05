@@ -22,11 +22,18 @@ class DiveView(ViewSet):
     def list(self, request):
         dives = Dive.objects.filter(diver__user=request.auth.user)
         serializer = DiveSerializer(dives, many=True, context={"request": request})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        diver = Diver.objects.get(user=request.auth.user)
-        gear_set = GearSet.objects.get(diver=diver, pk=request.data["gear_set"])
+        try:
+            diver = Diver.objects.get(user=request.auth.user)
+        except Diver.DoesNotExist as ex:
+            return Response({"error": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+    
+        try:
+            gear_set = GearSet.objects.get(diver=diver, pk=request.data["gear_set"])
+        except:
+            gear_set = None
 
         try:
             dive = Dive.objects.create(

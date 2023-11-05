@@ -3,7 +3,7 @@
 ## LOCAL DEVELOPMENT
 ### Set Up Project
 
-#### Install postgres and create database
+1. #### Install postgres
 - Install postgres using ubuntu:
     ```
     sudo sh -c 'echo "deb https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
@@ -15,25 +15,34 @@
 `sudo apt-get install libpq-dev`
 - Install PostgreSQL adapter for Python
 `pip install psycopg2`
-- Run postgresql service
-`sudo service postgresql start`
-- Create db
-`sudo -u postgres psql`
-- Create USER
+
+2. #### Run postgresql service
+- `sudo service postgresql start`
+
+3. #### Create db
+- `sudo -u postgres psql`
+
+4. #### Create USER
     ```
-    CREATE USER yourusername WITH PASSWORD 'yourpassword';
-    GRANT ALL PRIVILEGES ON DATABASE yourdbname TO yourusername;
+    CREATE USER surfaceinterval WITH PASSWORD 'yourpassword';
+    GRANT ALL PRIVILEGES ON DATABASE surface-interval-db TO surfaceinterval;
     ```
 
-- Create DB
-`createdb surface-interval-db`
+5. #### Create DB
+- `createdb surface-interval-db`
 
-#### Run migrations
-`python manage.py migrate`
+6. #### Run migrations
+- `python manage.py migrate`
 
 
 ## USING THE API
-Endpoints require an API token. The token is tied to a user and is provided by registering. Access the /register endpoint and provide the following:
+
+#### Connect to local db
+Run `bin/pgconnect` -- This automatically enters your user password as stored in the .env file to connect.
+
+Endpoints require a token. The token is tied to a user and is provided by logging in or registering.
+
+Access the /register endpoint and provide the following:
 ```
 username
 email
@@ -43,4 +52,6 @@ last_name
 units (provide 'metric' or 'imperial')
 ```
 
-Use the returned token after registering and provide it in the header as `Authorization: TOKEN "your_token"`
+Alternatively, run `python manage.py drf_create_token <username>` from the CLI.
+
+Provide the token in the header as `Authorization: TOKEN "your_token"`

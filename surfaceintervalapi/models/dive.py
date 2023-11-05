@@ -6,7 +6,7 @@ from surfaceintervalapi.models.favorite_dive import FavoriteDive
 class Dive(models.Model):
     diver = models.ForeignKey("Diver", on_delete=models.CASCADE)
     date = models.DateField()
-    gear_set = models.ForeignKey("GearSet", on_delete=models.DO_NOTHING)
+    gear_set = models.ForeignKey("GearSet", on_delete=models.DO_NOTHING, null=True)
     country_state = models.CharField(max_length=255)
     site = models.CharField(max_length=255)
     water = models.CharField(max_length=6, choices=[("Salt", "salt"), ("Fresh", "fresh")])
