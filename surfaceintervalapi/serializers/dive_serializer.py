@@ -11,7 +11,7 @@ class DiveSerializer(serializers.ModelSerializer):
             "id",
             "date",
             "gear_set",
-            "country_state",
+            "location",
             "site",
             "water",
             "depth",
@@ -22,6 +22,7 @@ class DiveSerializer(serializers.ModelSerializer):
             "tank_vol",
             "air_consumption",
             "favorite",
+            "specialties",
         )
 
 

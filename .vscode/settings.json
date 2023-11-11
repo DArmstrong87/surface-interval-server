@@ -1,9 +1,6 @@
 {
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "python.linting.pylintArgs": [
-        "--load-plugins=pylint_django",
-        "--django-settings-module=<folder name>.settings"
-    ],
-    "python.formatting.provider": "black",
+    "editor.defaultFormatter": "mikoz.black-py",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
 }

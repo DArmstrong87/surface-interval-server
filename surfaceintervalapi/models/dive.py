@@ -1,13 +1,14 @@
 from django.db import models
 
 from surfaceintervalapi.models.favorite_dive import FavoriteDive
+from surfaceintervalapi.models.dive_specialty import DiveSpecialty
 
 
 class Dive(models.Model):
     diver = models.ForeignKey("Diver", on_delete=models.CASCADE)
     date = models.DateField()
     gear_set = models.ForeignKey("GearSet", on_delete=models.DO_NOTHING, null=True)
-    country_state = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
     site = models.CharField(max_length=255)
     water = models.CharField(max_length=6, choices=[("Salt", "salt"), ("Fresh", "fresh")])
     depth = models.IntegerField()
@@ -35,12 +36,20 @@ class Dive(models.Model):
             psi_consumed = self.start_pressure - self.end_pressure
             working_pressure = self.start_pressure
             air_consumed = (self.tank_vol * psi_consumed) / working_pressure / self.time / bar_atm
-
-        return air_consumed
+            return round(air_consumed, 3)
+        return None
 
     @property
     def favorite(self):
         return True if FavoriteDive.objects.filter(dive=self).exists() else False
+
+    @property
+    def specialties(self):
+        dive_specialties = (
+            DiveSpecialty.objects.only("specialty").filter(dive=self.id).values("specialty__name")
+        )
+        specialties = [ds["specialty__name"] for ds in dive_specialties]
+        return specialties
 
     def __str__(self):
         return f"{self.pk} | {self.site} | {self.diver.user.first_name} {self.diver.user.last_name}"
