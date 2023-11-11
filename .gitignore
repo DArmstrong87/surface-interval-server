@@ -152,4 +152,4 @@ cython_debug/
 #.idea/
 
 surfaceintervalapi/fixtures/
-surfaceintervalapi/reseed.py
+my_utils/
