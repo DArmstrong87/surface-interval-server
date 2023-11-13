@@ -17,6 +17,14 @@ class DiverView(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    def retrieve(self, request, pk=None):
+        try:
+            diver = Diver.objects.get(pk=pk, user=request.auth.user)
+            serializer = DiverSerializer(diver, context={"request": request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
     def partial_update(self, request, pk):
         try:
             diver = Diver.objects.get(user=request.auth.user)
