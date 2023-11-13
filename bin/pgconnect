@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # PGPASSWORD=$DB_PASSWORD psql -h localhost -d surface-interval-db -U surfaceinterval
-echo "sudo service postgresql start"
+sudo service postgresql start
 
 # Set the path to your Django .env file
 ENV_FILE=".env"

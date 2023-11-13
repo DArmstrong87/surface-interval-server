@@ -23,6 +23,7 @@ class DiveSerializer(serializers.ModelSerializer):
             "air_consumption",
             "favorite",
             "specialties",
+            "dive_number"
         )
 
 

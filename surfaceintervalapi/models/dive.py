@@ -19,7 +19,7 @@ class Dive(models.Model):
     tank_vol = models.FloatField(default=80, blank=True, null=True)
 
     @property
-    def air_consumption(self):
+    def air_consumption(self) -> float or None:
         """
         Calculates air consumption in psi or bar per minute.
         Accounts for user's unit preferences.
@@ -40,16 +40,27 @@ class Dive(models.Model):
         return None
 
     @property
-    def favorite(self):
+    def favorite(self) -> bool:
         return True if FavoriteDive.objects.filter(dive=self).exists() else False
 
     @property
-    def specialties(self):
+    def specialties(self) -> list[str]:
         dive_specialties = (
             DiveSpecialty.objects.only("specialty").filter(dive=self.id).values("specialty__name")
         )
         specialties = [ds["specialty__name"] for ds in dive_specialties]
         return specialties
+
+    @property
+    def dive_number(self) -> int:
+        """
+        Tracks dive number according to date and id when there are multiple dives the same date
+        Start at 1
+        """
+        dives = Dive.objects.only("id").filter(diver=self.diver).order_by("date", "id").values("id")
+        dives = [dive["id"] for dive in dives]
+        number = dives.index(self.id)
+        return number + 1
 
     def __str__(self):
         return f"{self.pk} | {self.site} | {self.diver.user.first_name} {self.diver.user.last_name}"
