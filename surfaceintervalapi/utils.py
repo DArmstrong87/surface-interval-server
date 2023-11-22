@@ -3,6 +3,10 @@ def get_air_consumption(dive, units):
     Calculates surface air consumption rate
     0.315 cubic feet per minute
     Multiply by 28.3168 to get liters per minute
+
+    This will always be an over-estimation as it is calculated
+    based on the deepest depth.
+    Truer SAC rate is based on average depth of the dive.
     """
 
     depth = dive["depth"]

@@ -23,12 +23,16 @@ class Dive(models.Model):
         """
         Calculates air consumption in psi or bar per minute.
         Accounts for user's unit preferences.
+        Pressure values must not be None or 0
+        start_pressure must be greater than end_pressure
         """
+
         air_consumed = None
         if (
-            self.start_pressure is not None
-            and self.end_pressure is not None
+            self.start_pressure not in (None, 0)
+            and self.end_pressure not in (None, 0)
             and self.tank_vol is not None
+            and self.start_pressure > self.end_pressure
         ):
             units = self.diver.units
             atm = 33 if units == "imperial" else 10
@@ -54,10 +58,10 @@ class Dive(models.Model):
     @property
     def dive_number(self) -> int:
         """
-        Tracks dive number according to date and id when there are multiple dives the same date
+        Preserves dive number according to date and id when there are multiple dives the same date
         Start at 1
         """
-        dives = Dive.objects.only("id").filter(diver=self.diver).order_by("date", "id").values("id")
+        dives = Dive.objects.filter(diver=self.diver).order_by("date", "id").values("id")
         dives = [dive["id"] for dive in dives]
         number = dives.index(self.id)
         return number + 1

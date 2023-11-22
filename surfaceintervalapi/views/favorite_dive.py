@@ -19,28 +19,32 @@ class DiveView(ViewSet):
             return HttpResponseServerError(ex)
 
     def list(self, request):
-        dives = Dive.objects.filter(diver__user=request.auth.user)
+        dives = Dive.objects.filter(diver__user=request.auth.user).order_by('dive_number')
         serializer = DiveSerializer(dives, many=True, context={"request": request})
         return Response(serializer.data)
 
     def create(self, request):
         diver = Diver.objects.get(user=request.auth.user)
-        gear_set = GearSet.objects.get(diver=diver, pk=request.data["gear_set"])
+        gear_set = GearSet.objects.get(diver=diver, pk=request.data["gearSet"])
+        startPressure = request.data["startPressure"]
+        endPressure = request.data["endPressure"]
+        startPressure = None if startPressure == 0 or endPressure > startPressure else startPressure
+        endPressure = None if endPressure == 0 or endPressure > endPressure else endPressure
 
         try:
             dive = Dive.objects.create(
                 diver=diver,
                 date=request.data["date"],
                 gear_set=gear_set,
-                country_state=request.data["country_state"],
+                location=request.data["location"],
                 site=request.data["site"],
                 water=request.data["water"],
                 depth=request.data["depth"],
                 time=request.data["time"],
                 description=request.data["description"],
-                start_pressure=request.data["start_pressure"],
-                end_pressure=request.data["end_pressure"],
-                tank_vol=request.data["tank_vol"],
+                start_pressure=request.data["startPressure"],
+                end_pressure=request.data["endPressure"],
+                tank_vol=request.data["tankVol"],
             )
 
             serializer = DiveSerializer(dive, many=False, context={"request": request})
@@ -51,21 +55,21 @@ class DiveView(ViewSet):
 
     def partial_update(self, request, pk):
         diver = Diver.objects.get(user=request.auth.user)
-        gear_set = GearSet.objects.get(diver=diver, pk=request.data["gear_set"])
+        gear_set = GearSet.objects.get(diver=diver, pk=request.data["gearSet"])
 
         try:
             dive = Dive.objects.get(diver=diver, pk=pk)
             dive.date = request.data["date"]
             dive.gear_set = gear_set
-            dive.country_state = request.data["country_state"]
+            dive.location = request.data["location"]
             dive.site = request.data["site"]
             dive.water = request.data["water"]
             dive.depth = request.data["depth"]
             dive.time = request.data["time"]
             dive.description = request.data["description"]
-            dive.start_pressure = request.data["start_pressure"]
-            dive.end_pressure = request.data["end_pressure"]
-            dive.tank_vol = request.data["tank_vol"]
+            dive.start_pressure = request.data["startPressure"]
+            dive.end_pressure = request.data["endPressure"]
+            dive.tank_vol = request.data["tankVol"]
             dive.save()
 
             serializer = DiveSerializer(dive, many=False, context={"request": request})

@@ -20,7 +20,7 @@ class DiveView(ViewSet):
             return HttpResponseServerError(ex)
 
     def list(self, request):
-        dives = Dive.objects.filter(diver__user=request.auth.user)
+        dives = Dive.objects.filter(diver__user=request.auth.user).order_by("date", "id")
         serializer = DiveSerializer(dives, many=True, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -31,7 +31,7 @@ class DiveView(ViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            gear_set = GearSet.objects.get(diver=diver, pk=request.data["gear_set"])
+            gear_set = GearSet.objects.get(diver=diver, pk=request.data["gearSet"])
         except:
             gear_set = None
 
@@ -40,15 +40,15 @@ class DiveView(ViewSet):
                 diver=diver,
                 date=request.data["date"],
                 gear_set=gear_set,
-                country_state=request.data["country_state"],
+                location=request.data["location"],
                 site=request.data["site"],
                 water=request.data["water"],
                 depth=request.data["depth"],
                 time=request.data["time"],
                 description=request.data["description"],
-                start_pressure=request.data["start_pressure"],
-                end_pressure=request.data["end_pressure"],
-                tank_vol=request.data["tank_vol"],
+                start_pressure=request.data["startPressure"],
+                end_pressure=request.data["endPressure"],
+                tank_vol=request.data["tankVol"],
             )
 
             serializer = DiveSerializer(dive, many=False, context={"request": request})
@@ -65,7 +65,7 @@ class DiveView(ViewSet):
             dive = Dive.objects.get(diver=diver, pk=pk)
             dive.date = request.data["date"]
             dive.gear_set = gear_set
-            dive.country_state = request.data["country_state"]
+            dive.country_state = request.data["location"]
             dive.site = request.data["site"]
             dive.water = request.data["water"]
             dive.depth = request.data["depth"]
