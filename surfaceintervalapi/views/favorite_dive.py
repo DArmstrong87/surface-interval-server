@@ -19,7 +19,7 @@ class DiveView(ViewSet):
             return HttpResponseServerError(ex)
 
     def list(self, request):
-        dives = Dive.objects.filter(diver__user=request.auth.user).order_by('dive_number')
+        dives = Dive.objects.filter(diver__user=request.auth.user).order_by("dive_number")
         serializer = DiveSerializer(dives, many=True, context={"request": request})
         return Response(serializer.data)
 
