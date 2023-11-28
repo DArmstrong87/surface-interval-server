@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from surfaceintervalapi.models.dive import Dive
+from surfaceintervalapi.models.gear_item_service import GearItemService, GearItemServiceInterval
 
 
 class GearItem(models.Model):
@@ -10,72 +11,85 @@ class GearItem(models.Model):
     custom_gear_type = models.ForeignKey(
         "CustomGearType", on_delete=models.SET_NULL, blank=True, null=True
     )
-    name = models.CharField(max_length=200)
-    purchase_date = models.DateField(blank=True, null=True)
-    last_serviced = models.DateField(blank=True, null=True)
+    name = models.CharField(max_length=255)
 
-    # If an item was recently serviced, calculate dives or days since that date.
+
+    def service_interval(self):
+        try:
+            return GearItemServiceInterval.objects.get(gear_item=self)
+        except GearItemServiceInterval.DoesNotExist:
+            return None
+
+    @property
+    def last_service_date(self):
+        try:
+            return GearItemService.objects.filter(gear_item=self).order_by("service_date").first().service_date
+        except GearItemService.DoesNotExist:
+            return None
+
+    # Calculate dives or days since last service date.
     @property
     def dives_since_last_service(self):
-        count = 0
 
-        if self.last_serviced is None and self.purchase_date:
-            dives = Dive.objects.only("gear_set").filter(
-                diver=self.diver, date__gte=self.purchase_date
-            )
-        elif self.last_serviced:
-            dives = Dive.objects.only("gear_set").filter(
-                diver=self.diver, date__gte=self.last_serviced
-            )
-        else:
-            pass
+        service_interval = self.service_interval()
+        if service_interval is None:
+            return None
 
-        if self.purchase_date:
-            for dive in dives:
-                bcd = dive.gear_set.bcd
-                regulator = dive.gear_set.regulator
-                octopus = dive.gear_set.octopus
-                tank = dive.gear_set.tank
-                if self in [bcd, regulator, octopus, tank]:
-                    count += 1
+        print(service_interval)
+
+        count = None
+        dives = []
+        last_service_date = self.last_service_date
+        purchase_date = service_interval.purchase_date
+
+        # If no service date, get dives since purchase date.
+        if last_service_date is None and purchase_date is not None:
+            dives = Dive.objects.only("gear_set").filter(
+                diver=self.diver, date__gte=purchase_date
+            )
+        # Get dives since last_service_date
+        if last_service_date:
+            dives = Dive.objects.only("gear_set").filter(
+                diver=self.diver, date__gte=last_service_date
+            )
+
+        for dive in dives:
+            if dive.gear_set and dive.gear_item == self:
+                count += 1
 
         return count
 
-    @property
     def days_since_last_service(self):
-        if self.last_serviced is not None:
-            days = (timezone.now().date() - self.last_serviced).days
+        item_service = GearItemService.objects.filter(gear_item=self).order_by("service_date").first()
+        if item_service is not None:
+            days = (timezone.now().date() - item_service.service_date).days
             return days
         else:
             return None
 
     @property
-    def due_for_service_days(self):
-        if self.purchase_date is not None and self.days_since_last_service is not None:
-            gear_type = self.gear_type.name
-
-            if gear_type in ["BCD", "Tank", "Regulator", "Octopus"]:
-                dives_since = self.days_since_last_service
-                dives = dives_since - 365
-                return dives
-            else:
-                return None
-        else:
+    def due_for_service_days(self) -> tuple[bool, int]:
+        service_interval = self.service_interval()
+        if service_interval is None:
             return None
+
+        days_since_last_service = self.days_since_last_service()
+        days_past_due_service = days_since_last_service - service_interval.days
+
+        return days_past_due_service
+
 
     @property
     def due_for_service_dives(self):
-        if self.purchase_date is not None:
-            gear_type = self.gear_type.name
-
-            if gear_type in ["BCD", "Tank", "Regulator", "Octopus"]:
-                days_since = self.dives_since_last_service
-                days = days_since - 100
-                return days
-            else:
-                return None
-        else:
+        service_interval = self.service_interval()
+        if service_interval is None:
             return None
+        
+        dives_past_due_service = self.dives_since_last_service - service_interval.dives
+
+        return dives_past_due_service
+
+
 
     def __str__(self):
         return f"{self.pk} | {self.name}"

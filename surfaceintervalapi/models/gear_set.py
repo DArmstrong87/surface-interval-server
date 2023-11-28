@@ -77,6 +77,7 @@ class GearSet(models.Model):
         null=True,
         blank=True,
         limit_choices_to={"gear_type__name": "Tank"},
+        related_name="Tank",
     )
     # additional_gear = ArrayField(base_field=models.IntegerField, blank=True)
 
