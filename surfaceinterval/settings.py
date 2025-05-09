@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from decouple import config
 from pathlib import Path
+import sys
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -101,6 +102,7 @@ POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default="")
 DB_HOST = config("DB_HOST_READ", default="db")
 DB_PORT = config("DB_HOST_READ", default="5432")
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -109,6 +111,16 @@ DATABASES = {
         'PASSWORD': POSTGRES_PASSWORD,
         'HOST': DB_HOST,
         'PORT': DB_PORT,  # Default PostgreSQL port is 5432
+    }
+}
+
+TEST = "test" in sys.argv
+if TEST:
+    DB_HOST = "127.0.0.1"
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # or other DB backends like PostgreSQL
+        'NAME': 'test_db.sqlite3',  # Name for test database
     }
 }
 
@@ -157,3 +169,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
