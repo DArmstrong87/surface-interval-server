@@ -1,0 +1,82 @@
+[
+    {
+        "pk": 1,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 1,
+            "specialty": 3
+        }
+    },
+    {
+        "pk": 2,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 5,
+            "specialty": 2
+        }
+    },
+    {
+        "pk": 3,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 6,
+            "specialty": 4
+        }
+    },
+    {
+        "pk": 4,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 7,
+            "specialty": 9
+        }
+    },
+    {
+        "pk": 5,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 8,
+            "specialty": 9
+        }
+    },
+    {
+        "pk": 6,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 9,
+            "specialty": 5
+        }
+    },
+    {
+        "pk": 7,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 11,
+            "specialty": 2
+        }
+    },
+    {
+        "pk": 8,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 11,
+            "specialty": 6
+        }
+    },
+    {
+        "pk": 9,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 12,
+            "specialty": 6
+        }
+    },
+    {
+        "pk": 10,
+        "model": "surfaceintervalapi.divespecialty",
+        "fields": {
+            "dive": 13,
+            "specialty": 6
+        }
+    }
+]
