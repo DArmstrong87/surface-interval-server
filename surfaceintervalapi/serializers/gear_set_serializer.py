@@ -21,6 +21,7 @@ class GearItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = GearItem
         fields = (
+            "id",
             "gear_type",
             "custom_gear_type",
             "name",
