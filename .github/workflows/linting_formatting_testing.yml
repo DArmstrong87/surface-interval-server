@@ -1,4 +1,4 @@
-name: Linting, formatting and testing
+name: Linting, formatting, and testing
 
 on:
   push:
@@ -10,36 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        db: [postgres]
         python-version: [3.11]
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_DB: surface-interval-db
-          POSTGRES_USER: surfaceinterval
-          POSTGRES_PASSWORD: 1234
-        options: >-
-          --health-cmd="pg_isready -U surfaceinterval -d surface-interval-db"
-          --health-interval=10s
-          --health-timeout=10s
-          --health-retries=10
-        ports:
-          - 5432:5432
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          while ! pg_isready -h postgres -p 5432; do
-            echo "Waiting for PostgreSQL to be ready..."
-            sleep 10   # Increased sleep interval
-          done
-
-      - name: Check PostgreSQL logs
-        run: docker logs $(docker ps -q --filter ancestor=postgres:16)
 
       - name: Install dependencies
         run: |
@@ -53,12 +28,5 @@ jobs:
         run: black . --check
 
       - name: Running Unit Tests
-        env:
-          DB_HOST: postgres
-          DB_PORT: 5432
-          POSTGRES_DB: surface-interval-db
-          POSTGRES_USER: surfaceinterval
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
           python3 manage.py test
