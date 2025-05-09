@@ -21,9 +21,9 @@ jobs:
           POSTGRES_PASSWORD: 1234
         options: >-
           --health-cmd="pg_isready -U surfaceinterval -d surface-interval-db"
-          --health-interval 10s
-          --health-timeout 10s   # Increased timeout
-          --health-retries 10     # Increased retries
+          --health-interval=10s
+          --health-timeout=10s
+          --health-retries=10
         ports:
           - 5432:5432
 
