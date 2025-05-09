@@ -1,6 +1,7 @@
 CU_FT_TO_LITERS_FACTOR = 28.3168
 IMPERIAL_ATM_FACTOR = 33
 METRIC_ATM_FACTOR = 10
+DEFAULT_TANK_VOLUME = 80
 
 
 def get_air_consumption_cu_ft_min(dive, units):
@@ -15,10 +16,18 @@ def get_air_consumption_cu_ft_min(dive, units):
     """
 
     depth = dive["depth"]
-    start_pressure = dive["start_pressure"]
     time = dive["time"]
-    end_pressure = dive["end_pressure"]
-    tank_vol = dive["tank_vol"]  # Cubic feet
+    start_pressure = dive.get("start_pressure")
+    end_pressure = dive.get("end_pressure")
+
+    if start_pressure is None or end_pressure is None:
+        return None
+
+    print(dive)
+
+    # Default tank volume to 80 Cubic Feet if None
+    tank_vol = dive.get("tank_vol", DEFAULT_TANK_VOLUME)  # Cubic feet
+    tank_vol = DEFAULT_TANK_VOLUME if tank_vol is None else tank_vol
 
     atm = IMPERIAL_ATM_FACTOR if units.lower() == "imperial" else METRIC_ATM_FACTOR
     bar_atm = (depth / atm) + 1
