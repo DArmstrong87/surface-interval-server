@@ -1,0 +1,163 @@
+[
+    {
+        "pk": 1,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Dry Suit"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Deep"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Shore"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Navigation"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Wreck"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Boat"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Photography"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Drift"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Search and Recovery"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Enriched Air Nitrox (EANx)"
+        }
+    },
+    {
+        "pk": 11,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Ice"
+        }
+    },
+    {
+        "pk": 12,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Altitude"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Underwater Hunter"
+        }
+    },
+    {
+        "pk": 14,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Full Face Mask"
+        }
+    },
+    {
+        "pk": 15,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Rescue"
+        }
+    },
+    {
+        "pk": 16,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Diver Propulsion Vehicle (DPV)"
+        }
+    },
+    {
+        "pk": 17,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Sidemount"
+        }
+    },
+    {
+        "pk": 18,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Rebreather (CCR or SCR)"
+        }
+    },
+    {
+        "pk": 19,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Technical (Tec)"
+        }
+    },
+    {
+        "pk": 20,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Cavern"
+        }
+    },
+    {
+        "pk": 21,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Self-Reliant (solo)"
+        }
+    },
+    {
+        "pk": 22,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Delayed Surface Marker Buoy (DSMB)"
+        }
+    },
+    {
+        "pk": 23,
+        "model": "surfaceintervalapi.specialty",
+        "fields": {
+            "name": "Night"
+        }
+    }
+]

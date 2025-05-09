@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import F, Case, When, Q, CharField, Count
 from django.contrib.auth.models import User
-from surfaceintervalapi.utils import get_air_consumption
+from surfaceintervalapi.utils import get_air_consumption_cu_ft_min, get_air_consumption_ltrs_min
 
 from surfaceintervalapi.models.dive import Dive, DiveSpecialty
 
@@ -67,7 +67,6 @@ class Diver(models.Model):
 
         # Get the specialty with the max count
         most_logged_specialty = specialty_counts.first()
-        print(most_logged_specialty)
 
         # Return name and count of specialty
         return most_logged_specialty
@@ -77,16 +76,24 @@ class Diver(models.Model):
         dives = Dive.objects.filter(
             diver=self, start_pressure__isnull=False, end_pressure__isnull=False
         ).values()
+
+        avg_air_consumption_ltrs_min = None
+        avg_air_consumption_cu_ft_min = None
         for dive in dives:
-            air_consumption = get_air_consumption(dive, self.units)
+            air_consumption = get_air_consumption_cu_ft_min(dive, self.units)
             dive["air_consumption"] = air_consumption
 
-        avg_air_consumption = None
         if dives:
-            avg_air_consumption = sum([d["air_consumption"] for d in dives]) / len(dives)
-            print(
-                f"Average air consumption is {round(avg_air_consumption *  28.3168, 3)} liters per minute"
+            avg_air_consumption_cu_ft_min = sum([d["air_consumption"] for d in dives]) / len(dives)
+            avg_air_consumption_ltrs_min = get_air_consumption_ltrs_min(
+                avg_air_consumption_cu_ft_min
             )
+
+        avg_air_consumption = {
+            "cu_ft_min": avg_air_consumption_cu_ft_min,
+            "ltrs_min": avg_air_consumption_ltrs_min,
+        }
+
         return avg_air_consumption
 
     def __str__(self):
