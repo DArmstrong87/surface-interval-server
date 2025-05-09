@@ -115,12 +115,13 @@ DATABASES = {
 }
 
 TEST = "test" in sys.argv
+# Use a simple sqlite3 database for running tests
 if TEST:
     DB_HOST = "127.0.0.1"
     DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',  # or other DB backends like PostgreSQL
-        'NAME': 'test_db.sqlite3',  # Name for test database
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'test_db.sqlite3',
     }
 }
 
