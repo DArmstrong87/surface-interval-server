@@ -18,7 +18,7 @@ jobs:
         env:
           POSTGRES_DB: surface-interval-db
           POSTGRES_USER: surfaceinterval
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_PASSWORD: 1234
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
