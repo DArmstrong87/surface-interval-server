@@ -1,0 +1,61 @@
+name: Linting, formatting and testing
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        db: [postgres]
+        python-version: [3.11]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: surface-interval-db
+          POSTGRES_USER: surfaceinterval
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          while ! pg_isready -h postgres -p 5432; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 2
+          done
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Ruff linting
+        run: ruff .
+
+      - name: Run Black formatting check
+        run: black . --check
+
+      - name: Running Unit Tests
+        env:
+          DB_HOST: postgres
+          DB_PORT: 5432
+          POSTGRES_DB: surface-interval-db
+          POSTGRES_USER: surfaceinterval
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        run: |
+          python3 manage.py test
