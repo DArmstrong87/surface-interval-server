@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import F, Case, When, Q, CharField
+from django.db.models import F, Case, When, Q, CharField, Count
 from django.contrib.auth.models import User
 from surfaceintervalapi.utils import get_air_consumption
 
@@ -17,54 +17,63 @@ class Diver(models.Model):
 
     # Dynamic Properties:
     @property
-    def total_dives(self):
+    def total_dives(self) -> int:
         return Dive.objects.filter(diver=self).count()
 
     @property
-    def most_recent_dive(self):
+    def most_recent_dive(self) -> str:
         dive = Dive.objects.filter(diver=self).latest("date")
         return dive.date
 
     @property
-    def deepest_dive(self):
+    def deepest_dive(self) -> int | None:
         dive = Dive.objects.only("depth").filter(diver=self).order_by("-depth").first()
-        return dive.depth
+        if dive:
+            return dive.depth
+        return None
 
     @property
-    def longest_dive(self):
+    def longest_dive(self) -> int | None:
         dive = Dive.objects.only("time").filter(diver=self).order_by("-time").first()
-        return dive.time
+        if dive:
+            return dive.time
+        return None
 
     @property
-    def most_logged_specialty(self):
+    def shortest_dive(self) -> int | None:
+        dive = Dive.objects.only("time").filter(diver=self).order_by("time").first()
+        if dive:
+            return dive.time
+        return None
+
+    @property
+    def most_logged_specialty(self) -> dict[str | None, int | None]:
         # Get diver's dive specialties
         # Annotate specialty
         dives_specialties = DiveSpecialty.objects.annotate(
-            s_name=Case(
+            specialty_name=Case(
                 When(Q(custom_specialty__isnull=False), then=F("custom_specialty__name")),
                 default=F("specialty__name"),
                 output_field=CharField(),
             )
         ).filter(dive__diver=self)
 
-        # Get names only
-        diver_dive_specialty_names = [ds["s_name"] for ds in dives_specialties.values("s_name")]
-        # Get unique names
-        unique_diver_dive_specialty_names = list(set(diver_dive_specialty_names))
+        # Count the number of occurrences of each specialty
+        specialty_counts = (
+            dives_specialties.values("specialty_name")  # Group by specialty name
+            .annotate(count=Count("specialty_name"))
+            .order_by("-count")  # Count the occurrences of each specialty
+        )
 
-        # Make dict of specialty_name: count for each specialty
-        specialty_counts = {}
-        for s_name in unique_diver_dive_specialty_names:
-            specialty_types = [name for name in diver_dive_specialty_names if name == s_name]
-            specialty_counts[s_name] = len(specialty_types)
-
-        most_logged_specialty = max(specialty_counts, key=specialty_counts.get)
+        # Get the specialty with the max count
+        most_logged_specialty = specialty_counts.first()
+        print(most_logged_specialty)
 
         # Return name and count of specialty
-        return most_logged_specialty, specialty_counts[most_logged_specialty]
+        return most_logged_specialty
 
     @property
-    def avg_air_consumption(self):
+    def avg_air_consumption(self) -> float | None:
         dives = Dive.objects.filter(
             diver=self, start_pressure__isnull=False, end_pressure__isnull=False
         ).values()
@@ -72,10 +81,12 @@ class Diver(models.Model):
             air_consumption = get_air_consumption(dive, self.units)
             dive["air_consumption"] = air_consumption
 
-        avg_air_consumption = sum([d["air_consumption"] for d in dives]) / len(dives)
-        print(
-            f"Average air consumption is {round(avg_air_consumption *  28.3168, 3)} liters per minute"
-        )
+        avg_air_consumption = None
+        if dives:
+            avg_air_consumption = sum([d["air_consumption"] for d in dives]) / len(dives)
+            print(
+                f"Average air consumption is {round(avg_air_consumption *  28.3168, 3)} liters per minute"
+            )
         return avg_air_consumption
 
     def __str__(self):

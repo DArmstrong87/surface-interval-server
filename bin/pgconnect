@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# PGPASSWORD=$DB_PASSWORD psql -h localhost -d surface-interval-db -U surfaceinterval
+# PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost -d surface-interval-db -U surfaceinterval
 sudo service postgresql start
 
 # Set the path to your Django .env file
@@ -13,12 +13,12 @@ get_env_key() {
     echo "$value"
 }
 
-# Example: Read the value for the "DB_PASSWORD" from the .env file
+# Example: Read the value for the "POSTGRES_PASSWORD" from the .env file
 # Use it to connect to local db
-DB_PASSWORD=$(get_env_key "DB_PASSWORD")
-if [ -n "$DB_PASSWORD" ]; then
-    PGPASSWORD=$DB_PASSWORD psql -h localhost -d surface-interval-db -U surfaceinterval
+POSTGRES_PASSWORD=$(get_env_key "POSTGRES_PASSWORD")
+if [ -n "$POSTGRES_PASSWORD" ]; then
+    PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost -d surface-interval-db -U surfaceinterval
     # Sending Ctrl + D using printf
 else
-    echo "DB_PASSWORD not found in the .env file."
+    echo "POSTGRES_PASSWORD not found in the .env file."
 fi

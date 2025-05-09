@@ -95,18 +95,18 @@ WSGI_APPLICATION = 'surfaceinterval.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DB_NAME = config("DB_NAME", default="surface-interval-db")
-DB_USER = config("DB_USER", default="surfaceinterval")
-DB_PASSWORD = config("DB_PASSWORD", default="")
-DB_HOST = config("DB_HOST_READ", default="127.0.0.1")
+POSTGRES_DB = config("POSTGRES_DB", default="surface-interval-db")
+POSTGRES_USER = config("POSTGRES_USER", default="surfaceinterval")
+POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default="")
+DB_HOST = config("DB_HOST_READ", default="db")
 DB_PORT = config("DB_HOST_READ", default="5432")
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
+        'NAME': POSTGRES_DB,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
         'HOST': DB_HOST,
         'PORT': DB_PORT,  # Default PostgreSQL port is 5432
     }

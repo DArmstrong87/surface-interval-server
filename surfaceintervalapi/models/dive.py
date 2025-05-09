@@ -19,7 +19,7 @@ class Dive(models.Model):
     tank_vol = models.FloatField(default=80, blank=True, null=True)
 
     @property
-    def air_consumption(self) -> float or None:
+    def air_consumption(self) -> float | None:
         """
         Calculates air consumption in psi or bar per minute.
         Accounts for user's unit preferences.
