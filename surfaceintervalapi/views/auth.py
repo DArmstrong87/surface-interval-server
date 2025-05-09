@@ -23,7 +23,9 @@ def login_user(request):
     authenticated_user = authenticate(username=username, password=password)
     # If authentication was successful, respond with their token
     if authenticated_user is not None:
-        token = Token.objects.get(user=authenticated_user)
+        token, created = Token.objects.get_or_create(user=authenticated_user)
+        if created:
+            print(f"Token created for user {username}")
         data = {"valid": True, "token": token.key}
         return Response(data)
     else:
