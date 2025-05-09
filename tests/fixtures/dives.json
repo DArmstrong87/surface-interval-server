@@ -48,7 +48,7 @@
             "depth": 30,
             "time": 40,
             "description": "Giant stride entry.",
-            "start_pressure": null,
+            "start_pressure": 3000,
             "end_pressure": null,
             "tank_vol": null
         }
