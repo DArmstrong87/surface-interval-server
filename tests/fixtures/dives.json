@@ -14,7 +14,7 @@
             "description": "First Dive Ever!",
             "start_pressure": 3000,
             "end_pressure": 1500,
-            "tank_vol": 80
+            "tank_vol": null
         }
     },
     {
@@ -30,9 +30,9 @@
             "depth": 30,
             "time": 30,
             "description": "Second dive. 10lbs weight in 3mmm wetsuit.",
-            "start_pressure": null,
-            "end_pressure": null,
-            "tank_vol": null
+            "start_pressure": 1500,
+            "end_pressure": 650,
+            "tank_vol": 80
         }
     },
     {
@@ -48,7 +48,7 @@
             "depth": 30,
             "time": 40,
             "description": "Giant stride entry.",
-            "start_pressure": null,
+            "start_pressure": 3000,
             "end_pressure": null,
             "tank_vol": null
         }
