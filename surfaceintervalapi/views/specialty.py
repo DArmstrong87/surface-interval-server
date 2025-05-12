@@ -1,12 +1,15 @@
 from rest_framework import status
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from surfaceintervalapi.models import Specialty, Diver
 from surfaceintervalapi.serializers import SpecialtySerializer
 
 
-class SpecialtyView(ViewSet):
+class SpecialtyView(ModelViewSet):
+    queryset = Specialty.objects.all()
+    serializer_class = SpecialtySerializer
+
     def list(self, request):
         specialties = Specialty.objects.all()
         serializer = SpecialtySerializer(specialties, many=True, context={"request": request})

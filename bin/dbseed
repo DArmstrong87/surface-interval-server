@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-python manage.py loaddata --ignorenonexistent auth users users.json
-python manage.py loaddata --ignorenonexistent divers divers.json
-python manage.py loaddata --ignorenonexistent dives dives.json
-python manage.py loaddata --ignorenonexistent specialties specialties.json
-python manage.py loaddata --ignorenonexistent dive_specialties dive_specialties.json
+python manage.py loaddata --ignorenonexistent tests/fixtures/users.json
+python manage.py loaddata --ignorenonexistent tests/fixtures/divers.json
+python manage.py loaddata --ignorenonexistent tests/fixtures/dives.json
+python manage.py loaddata --ignorenonexistent tests/fixtures/specialties.json
+python manage.py loaddata --ignorenonexistent tests/fixtures/dive_specialties.json
