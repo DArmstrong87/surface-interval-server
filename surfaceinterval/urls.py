@@ -1,6 +1,7 @@
 from django.conf.urls import include
 from django.contrib import admin
 from django.urls import path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
 from surfaceintervalapi.views import (
@@ -34,6 +35,10 @@ urlpatterns = [
     path("", include(router.urls)),
     path("register", register_user),
     path("login", login_user, name="login"),
+    # Generate raw OpenAPI schema (YAML or JSON)
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    # Interactive Swagger UI
+    path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path("api-auth", include("rest_framework.urls", namespace="rest_framework")),
     path("admin/", admin.site.urls),
 ]

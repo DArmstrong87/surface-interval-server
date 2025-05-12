@@ -16,7 +16,7 @@ class GearItem(models.Model):
 
     # If an item was recently serviced, calculate dives or days since that date.
     @property
-    def dives_since_last_service(self):
+    def dives_since_last_service(self) -> int:
         count = 0
 
         if self.last_serviced is None and self.purchase_date:
@@ -42,7 +42,7 @@ class GearItem(models.Model):
         return count
 
     @property
-    def days_since_last_service(self):
+    def days_since_last_service(self) -> int | None:
         if self.last_serviced is not None:
             days = (timezone.now().date() - self.last_serviced).days
             return days
@@ -50,7 +50,7 @@ class GearItem(models.Model):
             return None
 
     @property
-    def due_for_service_days(self):
+    def due_for_service_days(self) -> int | None:
         if self.purchase_date is not None and self.days_since_last_service is not None:
             gear_type = self.gear_type.name
 
@@ -64,7 +64,7 @@ class GearItem(models.Model):
             return None
 
     @property
-    def due_for_service_dives(self):
+    def due_for_service_dives(self) -> int | None:
         if self.purchase_date is not None:
             gear_type = self.gear_type.name
 

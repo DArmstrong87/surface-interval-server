@@ -1,11 +1,14 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from surfaceintervalapi.models import Diver, CustomGearType
 from surfaceintervalapi.serializers import CustomGearTypeSerializer
 
 
-class CustomGearTypeView(ViewSet):
+class CustomGearTypeView(ModelViewSet):
+    queryset = CustomGearType.objects.all()
+    serializer_class = CustomGearTypeSerializer
+
     def list(self, request):
         custom_gear_type = CustomGearType.objects.filter(diver__user=request.auth.user)
         serializer = CustomGearTypeSerializer(

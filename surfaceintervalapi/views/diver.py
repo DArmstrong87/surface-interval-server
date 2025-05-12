@@ -1,14 +1,17 @@
 from django.http import HttpResponseServerError
 
 from rest_framework import status
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from surfaceintervalapi.models import Diver
 from surfaceintervalapi.serializers import DiverSerializer
 
 
-class DiverView(ViewSet):
+class DiverView(ModelViewSet):
+    queryset = Diver.objects.all()
+    serializer_class = DiverSerializer
+
     def list(self, request):
         try:
             diver = Diver.objects.get(user=request.auth.user)
