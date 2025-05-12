@@ -1,8 +1,16 @@
 
+# LOCAL DEVELOPMENT
 
-## LOCAL DEVELOPMENT
-### Set Up Project
+## 🛠️ Set Up Project
 
+#### Containerized (recommended) 📦
+1. Ensure docker is installed: https://docs.docker.com/engine/install/
+2. Run `bin/build` which will run the docker build command. This will also run django migrations and run django server.
+3. Run `bin/dbseed` which will install fixtures and seed the database.
+
+That's it! 
+
+#### Non-containerized ⌨️
 1. #### Install postgres
 - Install postgres using ubuntu:
     ```
@@ -35,14 +43,18 @@
 - `python manage.py migrate`
 
 
-## USING THE API
+## ▶️ USING THE API
 
 #### Connect to local db
-Run `bin/pgconnect` -- This automatically enters your user password as stored in the .env file to connect.
 
-Endpoints require a token. The token is tied to a user and is provided by logging in or registering.
+<b>Docker:</b> As long as container is running, you are good to go!
 
-Access the /register endpoint and provide the following:
+<b>Non-Docker:</b> Run `bin/pgconnect` -- This automatically enters your user password as stored in the .env file to connect.
+
+⚠️ Endpoints require a token. The token is tied to a user and is provided by logging in, registering or running the `drf_create_token` command.
+
+#### Register New User 🪪
+As long as you ran the `bin/dbseed` command, you should not have to do this but for registering a new user and testing the `/register` endpoint, provide the following:
 ```
 username
 email
@@ -52,6 +64,18 @@ last_name
 units (provide 'metric' or 'imperial')
 ```
 
-Alternatively, run `python manage.py drf_create_token <username>` from the CLI.
+#### Login and Tokens
+Access the /login endpoint and provide the following:
+```
+username
+password
+```
 
+#### Generate Token 🪙
+Alternatively, run `python manage.py drf_create_token <username>` from the CLI which will show:
+```
+Generated token <TOKEN> for user TestUser
+```
+
+### API Authorization Header 🔒
 Provide the token in the header as `Authorization: TOKEN "your_token"`
