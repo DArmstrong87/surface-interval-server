@@ -3,13 +3,16 @@ from django.http import HttpResponseServerError
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from surfaceintervalapi.models import Dive, Diver, FavoriteDive, GearSet
 from surfaceintervalapi.serializers import DiveSerializer
 
 
-class DiveView(ViewSet):
+class DiveView(ModelViewSet):
+    queryset = Dive.objects.all()
+    serializer_class = DiveSerializer
+
     def retrieve(self, request, pk=None):
         try:
             dive = Dive.objects.get(pk=pk, diver__user=request.auth.user)

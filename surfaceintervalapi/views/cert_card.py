@@ -1,12 +1,15 @@
 from django.http import HttpResponseServerError
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from surfaceintervalapi.models import Diver, CertificationCard
 from surfaceintervalapi.serializers import CertCardSerializer
 
 
-class CertCardView(ViewSet):
+class CertCardView(ModelViewSet):
+    queryset = CertificationCard.objects.all()
+    serializer_class = CertCardSerializer
+
     def retrieve(self, request, pk=None):
         try:
             cert = CertificationCard.objects.get(pk=pk, diver__user=request.auth.user)

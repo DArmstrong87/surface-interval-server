@@ -23,7 +23,9 @@ class DiverSerializer(serializers.ModelSerializer):
             "most_recent_dive",
             "deepest_dive",
             "longest_dive",
+            "shortest_dive",
             "most_logged_specialty",
             "avg_air_consumption",
+            "most_logged_specialty",
         )
         depth = 1
