@@ -64,12 +64,29 @@ source env/bin/activate
 ```
 pip install -r requirements.txt
 ```
-#### 4. Setup and seed database
+
+#### 4. Add .env
+```
+touch .env
+```
+
+```
+DEBUG=True
+DB_HOST=surface-interval-db
+DB_PORT=5432
+POSTGRES_DB=surface-interval-db
+POSTGRES_USER=surfaceinterval
+POSTGRES_PASSWORD=123
+```
+
+#### 5. Setup and seed database
 
 #### Containerized (recommended) 📦
 1. Ensure docker is installed: https://docs.docker.com/engine/install/
 2. Run `bin/build` which will run the docker build command. This will also run django migrations and run django server.
-3. Run `bin/dbseed` which will install fixtures and seed the database.
+    1. From here on, any python commands will need to be prepended with `docker-compose exec surface-interval-server`.
+    2. Alternatively, you can stop the `surface-interval-server` container and run the server from the terminal, but you'll need to change your db host to `127.0.0.1` in your .env.
+3. Run `docker-compose exec surface-interval-server bin/dbseed` which will install fixtures and seed the database.
 
 That's it! 
 
