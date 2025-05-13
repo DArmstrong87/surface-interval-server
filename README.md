@@ -36,7 +36,12 @@ I originally built Surface Interval as my frontend capstone project at Nashville
 12. Apply styling to UI ⏳
 13. Write some tests using mocked data ⏳
 14. Custom ratelimit decorator ⏳
-15. Caching
+15. Caching ⏳
+
+# Entity Relationship Diagram
+https://dbdiagram.io/d/Surface-Interval-6121e4556dc2bb6073b57eeb
+
+![Surface Interval ERD](images/surface_interval_erd.png)
 
 
 # LOCAL DEVELOPMENT
