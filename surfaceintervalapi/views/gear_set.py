@@ -1,12 +1,15 @@
 from rest_framework import status
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from surfaceintervalapi.models import Diver, GearSet, GearItem
 from surfaceintervalapi.serializers import GearSetSerializer
 
 
-class GearSetView(ViewSet):
+class GearSetView(ModelViewSet):
+    queryset = GearSet.objects.all()
+    serializer_class = GearSetSerializer
+
     def retrieve(self, request, pk):
         gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
         serializer = GearSetSerializer(gear_set, many=False, context={"request": request})

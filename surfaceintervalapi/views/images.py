@@ -1,12 +1,15 @@
 from rest_framework import status
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from surfaceintervalapi.models import Image
 from surfaceintervalapi.serializers import ImageSerializer
 
 
-class ImageView(ViewSet):
+class ImageView(ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+
     def list(self, request):
         images = Image.objects.filter(diver__user=request.auth.user)
         serializer = ImageSerializer(images, many=True, context={"request": request})

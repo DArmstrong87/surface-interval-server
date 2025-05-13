@@ -1,0 +1,272 @@
+[
+    {
+        "pk": 1,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2017-08-11",
+            "gear_set": null,
+            "location": "Kentucky",
+            "site": "Pennyroyal",
+            "water": "Fresh",
+            "depth": 25,
+            "time": 25,
+            "description": "First Dive Ever!",
+            "start_pressure": 3000,
+            "end_pressure": 1500,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 2,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2017-08-11",
+            "gear_set": null,
+            "location": "Kentucky",
+            "site": "Pennyroyal",
+            "water": "Fresh",
+            "depth": 30,
+            "time": 30,
+            "description": "Second dive. 10lbs weight in 3mmm wetsuit.",
+            "start_pressure": 1500,
+            "end_pressure": 650,
+            "tank_vol": 80
+        }
+    },
+    {
+        "pk": 3,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2017-08-12",
+            "gear_set": null,
+            "location": "Kentucky",
+            "site": "Pennyroyal",
+            "water": "Fresh",
+            "depth": 30,
+            "time": 40,
+            "description": "Giant stride entry.",
+            "start_pressure": 3000,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 4,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2017-08-12",
+            "gear_set": null,
+            "location": "Kentucky",
+            "site": "Pennyroyal",
+            "water": "Fresh",
+            "depth": 40,
+            "time": 45,
+            "description": "Final checkout dive, then I'm certified!",
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 5,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-03-10",
+            "gear_set": null,
+            "location": "Georgia",
+            "site": "Georgia Aquarium",
+            "water": "Salt",
+            "depth": 30,
+            "time": 35,
+            "description": "Front roll entry. Saw whale sharks, manta rays and many different kinds of sharks!!!",
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 6,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-05-03",
+            "gear_set": null,
+            "location": "Belize",
+            "site": "Great Blue Hole",
+            "water": "Salt",
+            "depth": 130,
+            "time": 15,
+            "description": "Maxing out the recreational limit! Stalactites down deep and a black-tipped reef shark in the distance.",
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 7,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-05-03",
+            "gear_set": null,
+            "location": "Belize",
+            "site": "Half Moon Wall",
+            "water": "Salt",
+            "depth": 60,
+            "time": 60,
+            "description": "",
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 8,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-05-03",
+            "gear_set": null,
+            "location": "Belize",
+            "site": "Long Caye Aquarium",
+            "water": "Salt",
+            "depth": 60,
+            "time": 60,
+            "description": null,
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 9,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-11-08",
+            "gear_set": null,
+            "location": "Cozumel",
+            "site": "Palancar",
+            "water": "Salt",
+            "depth": 79,
+            "time": 50,
+            "description": null,
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 10,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-11-08",
+            "gear_set": null,
+            "location": "Cozumel",
+            "site": "Tormentos",
+            "water": "Salt",
+            "depth": 61,
+            "time": 56,
+            "description": null,
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 11,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-11-08",
+            "gear_set": null,
+            "location": "Cozumel",
+            "site": "La Blanca",
+            "water": "Salt",
+            "depth": 21,
+            "time": 32,
+            "description": "First night dive! This was outside of Blue Angel Resort.",
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 12,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-11-09",
+            "gear_set": null,
+            "location": "Cozumel",
+            "site": "Santa Rosa",
+            "water": "Salt",
+            "depth": 72,
+            "time": 49,
+            "description": null,
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 13,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-11-09",
+            "gear_set": null,
+            "location": "Cozumel",
+            "site": "Paradise",
+            "water": "Salt",
+            "depth": 43,
+            "time": 64,
+            "description": null,
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 14,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-11-09",
+            "gear_set": null,
+            "location": "Cozumel",
+            "site": "Paradise",
+            "water": "Salt",
+            "depth": 49,
+            "time": 56,
+            "description": "Night dive where I saw that awesome blue octopus!",
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    },
+    {
+        "pk": 15,
+        "model": "surfaceintervalapi.dive",
+        "fields": {
+            "diver": 1,
+            "date": "2018-11-10",
+            "gear_set": null,
+            "location": "Cozumel",
+            "site": "Cathedral",
+            "water": "Salt",
+            "depth": 105,
+            "time": 33,
+            "description": "Deep drift dive through some big overhangs!",
+            "start_pressure": null,
+            "end_pressure": null,
+            "tank_vol": null
+        }
+    }
+]

@@ -8,4 +8,6 @@ from .gear_item_serializer import GearItemSerializer
 from .gear_set_serializer import GearSetSerializer
 from .gear_type_serializer import GearTypeSerializer
 from .images_serializer import ImageSerializer
+from .login_serializer import LoginSerializer, TokenSerializer
 from .specialty_serializer import SpecialtySerializer
+from .register_serializer import RegisterSerializer, RegisterTokenSerializer

@@ -1,0 +1,2160 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /cert-cards:
+    get:
+      operationId: cert_cards_list
+      tags:
+      - cert-cards
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CertCard'
+          description: ''
+    post:
+      operationId: cert_cards_create
+      tags:
+      - cert-cards
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertCard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CertCard'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CertCard'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertCard'
+          description: ''
+  /cert-cards/{id}:
+    get:
+      operationId: cert_cards_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this certification card.
+        required: true
+      tags:
+      - cert-cards
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertCard'
+          description: ''
+    put:
+      operationId: cert_cards_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this certification card.
+        required: true
+      tags:
+      - cert-cards
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertCard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CertCard'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CertCard'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertCard'
+          description: ''
+    patch:
+      operationId: cert_cards_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this certification card.
+        required: true
+      tags:
+      - cert-cards
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCertCard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCertCard'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCertCard'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertCard'
+          description: ''
+    delete:
+      operationId: cert_cards_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this certification card.
+        required: true
+      tags:
+      - cert-cards
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /custom-gear-types:
+    get:
+      operationId: custom_gear_types_list
+      tags:
+      - custom-gear-types
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomGearType'
+          description: ''
+    post:
+      operationId: custom_gear_types_create
+      tags:
+      - custom-gear-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomGearType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomGearType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomGearType'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomGearType'
+          description: ''
+  /custom-gear-types/{id}:
+    get:
+      operationId: custom_gear_types_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this custom gear type.
+        required: true
+      tags:
+      - custom-gear-types
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomGearType'
+          description: ''
+    put:
+      operationId: custom_gear_types_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this custom gear type.
+        required: true
+      tags:
+      - custom-gear-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomGearType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomGearType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomGearType'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomGearType'
+          description: ''
+    patch:
+      operationId: custom_gear_types_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this custom gear type.
+        required: true
+      tags:
+      - custom-gear-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomGearType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomGearType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCustomGearType'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomGearType'
+          description: ''
+    delete:
+      operationId: custom_gear_types_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this custom gear type.
+        required: true
+      tags:
+      - custom-gear-types
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /divers:
+    get:
+      operationId: divers_list
+      tags:
+      - divers
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Diver'
+          description: ''
+    post:
+      operationId: divers_create
+      tags:
+      - divers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Diver'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Diver'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Diver'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diver'
+          description: ''
+  /divers/{id}:
+    get:
+      operationId: divers_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this diver.
+        required: true
+      tags:
+      - divers
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diver'
+          description: ''
+    put:
+      operationId: divers_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this diver.
+        required: true
+      tags:
+      - divers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Diver'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Diver'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Diver'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diver'
+          description: ''
+    patch:
+      operationId: divers_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this diver.
+        required: true
+      tags:
+      - divers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDiver'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDiver'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDiver'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diver'
+          description: ''
+    delete:
+      operationId: divers_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this diver.
+        required: true
+      tags:
+      - divers
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /dives:
+    get:
+      operationId: dives_list
+      tags:
+      - dives
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dive'
+          description: ''
+    post:
+      operationId: dives_create
+      tags:
+      - dives
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dive'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Dive'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Dive'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dive'
+          description: ''
+  /dives/{id}:
+    get:
+      operationId: dives_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dive.
+        required: true
+      tags:
+      - dives
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dive'
+          description: ''
+    put:
+      operationId: dives_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dive.
+        required: true
+      tags:
+      - dives
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dive'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Dive'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Dive'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dive'
+          description: ''
+    patch:
+      operationId: dives_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dive.
+        required: true
+      tags:
+      - dives
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDive'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDive'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDive'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dive'
+          description: ''
+    delete:
+      operationId: dives_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dive.
+        required: true
+      tags:
+      - dives
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /dives/{id}/images:
+    get:
+      operationId: dives_images_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dive.
+        required: true
+      tags:
+      - dives
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dive'
+          description: ''
+  /dives/{id}/star:
+    post:
+      operationId: dives_star_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dive.
+        required: true
+      tags:
+      - dives
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dive'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Dive'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Dive'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dive'
+          description: ''
+    delete:
+      operationId: dives_star_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dive.
+        required: true
+      tags:
+      - dives
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /gear-items:
+    get:
+      operationId: gear_items_list
+      tags:
+      - gear-items
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GearItem'
+          description: ''
+    post:
+      operationId: gear_items_create
+      tags:
+      - gear-items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearItem'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItem'
+          description: ''
+  /gear-items/{id}:
+    get:
+      operationId: gear_items_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item.
+        required: true
+      tags:
+      - gear-items
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItem'
+          description: ''
+    put:
+      operationId: gear_items_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item.
+        required: true
+      tags:
+      - gear-items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearItem'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItem'
+          description: ''
+    patch:
+      operationId: gear_items_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item.
+        required: true
+      tags:
+      - gear-items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItem'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItem'
+          description: ''
+    delete:
+      operationId: gear_items_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item.
+        required: true
+      tags:
+      - gear-items
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /gear-sets:
+    get:
+      operationId: gear_sets_list
+      tags:
+      - gear-sets
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GearSet'
+          description: ''
+    post:
+      operationId: gear_sets_create
+      tags:
+      - gear-sets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearSet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearSet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearSet'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearSet'
+          description: ''
+  /gear-sets/{id}:
+    get:
+      operationId: gear_sets_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear set.
+        required: true
+      tags:
+      - gear-sets
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearSet'
+          description: ''
+    put:
+      operationId: gear_sets_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear set.
+        required: true
+      tags:
+      - gear-sets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearSet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearSet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearSet'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearSet'
+          description: ''
+    patch:
+      operationId: gear_sets_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear set.
+        required: true
+      tags:
+      - gear-sets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGearSet'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGearSet'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGearSet'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearSet'
+          description: ''
+    delete:
+      operationId: gear_sets_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear set.
+        required: true
+      tags:
+      - gear-sets
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /gear-types:
+    get:
+      operationId: gear_types_list
+      tags:
+      - gear-types
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GearType'
+          description: ''
+    post:
+      operationId: gear_types_create
+      tags:
+      - gear-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearType'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearType'
+          description: ''
+  /gear-types/{id}:
+    get:
+      operationId: gear_types_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear type.
+        required: true
+      tags:
+      - gear-types
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearType'
+          description: ''
+    put:
+      operationId: gear_types_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear type.
+        required: true
+      tags:
+      - gear-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearType'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearType'
+          description: ''
+    patch:
+      operationId: gear_types_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear type.
+        required: true
+      tags:
+      - gear-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGearType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGearType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGearType'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearType'
+          description: ''
+    delete:
+      operationId: gear_types_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear type.
+        required: true
+      tags:
+      - gear-types
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /images:
+    get:
+      operationId: images_list
+      tags:
+      - images
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Image'
+          description: ''
+    post:
+      operationId: images_create
+      tags:
+      - images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Image'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Image'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: ''
+  /images/{id}:
+    get:
+      operationId: images_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this image.
+        required: true
+      tags:
+      - images
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: ''
+    put:
+      operationId: images_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this image.
+        required: true
+      tags:
+      - images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Image'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Image'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Image'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: ''
+    patch:
+      operationId: images_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this image.
+        required: true
+      tags:
+      - images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedImage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedImage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedImage'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+          description: ''
+    delete:
+      operationId: images_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this image.
+        required: true
+      tags:
+      - images
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /login:
+    post:
+      operationId: login_create
+      description: |-
+        Handles the authentication of a user
+        Method arguments:
+        request -- The full HTTP request object
+      tags:
+      - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+          description: ''
+  /register:
+    post:
+      operationId: register_create
+      tags:
+      - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterToken'
+          description: ''
+  /specialties:
+    get:
+      operationId: specialties_list
+      tags:
+      - specialties
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Specialty'
+          description: ''
+    post:
+      operationId: specialties_create
+      tags:
+      - specialties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Specialty'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Specialty'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Specialty'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialty'
+          description: ''
+  /specialties/{id}:
+    get:
+      operationId: specialties_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this specialty.
+        required: true
+      tags:
+      - specialties
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialty'
+          description: ''
+    put:
+      operationId: specialties_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this specialty.
+        required: true
+      tags:
+      - specialties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Specialty'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Specialty'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Specialty'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialty'
+          description: ''
+    patch:
+      operationId: specialties_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this specialty.
+        required: true
+      tags:
+      - specialties
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSpecialty'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSpecialty'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSpecialty'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Specialty'
+          description: ''
+    delete:
+      operationId: specialties_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this specialty.
+        required: true
+      tags:
+      - specialties
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    CertCard:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        date_issued:
+          type: string
+          format: date
+        image_front_url:
+          type: string
+          format: uri
+          maxLength: 200
+        image_back_url:
+          type: string
+          format: uri
+          maxLength: 200
+      required:
+      - date_issued
+      - id
+      - image_back_url
+      - image_front_url
+      - name
+    CustomGearType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - id
+      - name
+    Dive:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        gear_set:
+          type: integer
+          nullable: true
+        location:
+          type: string
+          maxLength: 255
+        site:
+          type: string
+          maxLength: 255
+        water:
+          $ref: '#/components/schemas/WaterEnum'
+        depth:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        time:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        description:
+          type: string
+          nullable: true
+        start_pressure:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        end_pressure:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        tank_vol:
+          type: number
+          format: double
+          nullable: true
+        air_consumption:
+          type: number
+          format: double
+          nullable: true
+          description: |-
+            Calculates air consumption in psi or bar per minute.
+            Accounts for user's unit preferences.
+            Pressure values must not be None or 0
+            start_pressure must be greater than end_pressure
+          readOnly: true
+        favorite:
+          type: boolean
+          readOnly: true
+        specialties:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        dive_number:
+          type: integer
+          description: |-
+            Preserves dive number according to date and id when there are multiple dives the same date
+            Start at 1
+          readOnly: true
+      required:
+      - air_consumption
+      - date
+      - depth
+      - dive_number
+      - favorite
+      - id
+      - location
+      - site
+      - specialties
+      - time
+      - water
+    Diver:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/User'
+        units:
+          $ref: '#/components/schemas/UnitsEnum'
+        total_dives:
+          type: integer
+          readOnly: true
+        most_recent_dive:
+          type: string
+          readOnly: true
+        deepest_dive:
+          type: integer
+          nullable: true
+          readOnly: true
+        longest_dive:
+          type: integer
+          nullable: true
+          readOnly: true
+        shortest_dive:
+          type: integer
+          nullable: true
+          readOnly: true
+        most_logged_specialty:
+          type: object
+          additionalProperties:
+            type: integer
+            nullable: true
+          readOnly: true
+        avg_air_consumption:
+          type: number
+          format: double
+          nullable: true
+          readOnly: true
+      required:
+      - avg_air_consumption
+      - deepest_dive
+      - id
+      - longest_dive
+      - most_logged_specialty
+      - most_recent_dive
+      - shortest_dive
+      - total_dives
+      - units
+      - user
+    GearItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gear_type:
+          $ref: '#/components/schemas/GearType'
+        custom_gear_type:
+          $ref: '#/components/schemas/CustomGearType'
+        name:
+          type: string
+          maxLength: 200
+        purchase_date:
+          type: string
+          format: date
+          nullable: true
+        last_serviced:
+          type: string
+          format: date
+          nullable: true
+        dives_since_last_service:
+          type: integer
+          readOnly: true
+        days_since_last_service:
+          type: integer
+          nullable: true
+          readOnly: true
+        due_for_service_days:
+          type: integer
+          nullable: true
+          readOnly: true
+        due_for_service_dives:
+          type: integer
+          nullable: true
+          readOnly: true
+      required:
+      - custom_gear_type
+      - days_since_last_service
+      - dives_since_last_service
+      - due_for_service_days
+      - due_for_service_dives
+      - gear_type
+      - id
+      - name
+    GearSet:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        bcd:
+          $ref: '#/components/schemas/GearItem'
+        regulator:
+          $ref: '#/components/schemas/GearItem'
+        octopus:
+          $ref: '#/components/schemas/GearItem'
+        mask:
+          $ref: '#/components/schemas/GearItem'
+        fins:
+          $ref: '#/components/schemas/GearItem'
+        boots:
+          $ref: '#/components/schemas/GearItem'
+        computer:
+          $ref: '#/components/schemas/GearItem'
+        exposure_suit:
+          $ref: '#/components/schemas/GearItem'
+        weights:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        tank:
+          $ref: '#/components/schemas/GearItem'
+      required:
+      - bcd
+      - boots
+      - computer
+      - exposure_suit
+      - fins
+      - id
+      - mask
+      - octopus
+      - regulator
+      - tank
+    GearType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+      required:
+      - id
+      - name
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        dive:
+          $ref: '#/components/schemas/Dive'
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+      required:
+      - dive
+      - id
+      - url
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+      - password
+      - username
+    PatchedCertCard:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        date_issued:
+          type: string
+          format: date
+        image_front_url:
+          type: string
+          format: uri
+          maxLength: 200
+        image_back_url:
+          type: string
+          format: uri
+          maxLength: 200
+    PatchedCustomGearType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+    PatchedDive:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        date:
+          type: string
+          format: date
+        gear_set:
+          type: integer
+          nullable: true
+        location:
+          type: string
+          maxLength: 255
+        site:
+          type: string
+          maxLength: 255
+        water:
+          $ref: '#/components/schemas/WaterEnum'
+        depth:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        time:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        description:
+          type: string
+          nullable: true
+        start_pressure:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        end_pressure:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        tank_vol:
+          type: number
+          format: double
+          nullable: true
+        air_consumption:
+          type: number
+          format: double
+          nullable: true
+          description: |-
+            Calculates air consumption in psi or bar per minute.
+            Accounts for user's unit preferences.
+            Pressure values must not be None or 0
+            start_pressure must be greater than end_pressure
+          readOnly: true
+        favorite:
+          type: boolean
+          readOnly: true
+        specialties:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        dive_number:
+          type: integer
+          description: |-
+            Preserves dive number according to date and id when there are multiple dives the same date
+            Start at 1
+          readOnly: true
+    PatchedDiver:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          $ref: '#/components/schemas/User'
+        units:
+          $ref: '#/components/schemas/UnitsEnum'
+        total_dives:
+          type: integer
+          readOnly: true
+        most_recent_dive:
+          type: string
+          readOnly: true
+        deepest_dive:
+          type: integer
+          nullable: true
+          readOnly: true
+        longest_dive:
+          type: integer
+          nullable: true
+          readOnly: true
+        shortest_dive:
+          type: integer
+          nullable: true
+          readOnly: true
+        most_logged_specialty:
+          type: object
+          additionalProperties:
+            type: integer
+            nullable: true
+          readOnly: true
+        avg_air_consumption:
+          type: number
+          format: double
+          nullable: true
+          readOnly: true
+    PatchedGearItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gear_type:
+          $ref: '#/components/schemas/GearType'
+        custom_gear_type:
+          $ref: '#/components/schemas/CustomGearType'
+        name:
+          type: string
+          maxLength: 200
+        purchase_date:
+          type: string
+          format: date
+          nullable: true
+        last_serviced:
+          type: string
+          format: date
+          nullable: true
+        dives_since_last_service:
+          type: integer
+          readOnly: true
+        days_since_last_service:
+          type: integer
+          nullable: true
+          readOnly: true
+        due_for_service_days:
+          type: integer
+          nullable: true
+          readOnly: true
+        due_for_service_dives:
+          type: integer
+          nullable: true
+          readOnly: true
+    PatchedGearSet:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        bcd:
+          $ref: '#/components/schemas/GearItem'
+        regulator:
+          $ref: '#/components/schemas/GearItem'
+        octopus:
+          $ref: '#/components/schemas/GearItem'
+        mask:
+          $ref: '#/components/schemas/GearItem'
+        fins:
+          $ref: '#/components/schemas/GearItem'
+        boots:
+          $ref: '#/components/schemas/GearItem'
+        computer:
+          $ref: '#/components/schemas/GearItem'
+        exposure_suit:
+          $ref: '#/components/schemas/GearItem'
+        weights:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        tank:
+          $ref: '#/components/schemas/GearItem'
+    PatchedGearType:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+    PatchedImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        dive:
+          $ref: '#/components/schemas/Dive'
+        url:
+          type: string
+          format: uri
+          maxLength: 200
+    PatchedSpecialty:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+    Register:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        units:
+          type: string
+      required:
+      - email
+      - password
+      - units
+      - username
+    RegisterToken:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+      - token
+    Specialty:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - id
+      - name
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+      - token
+    UnitsEnum:
+      enum:
+      - Metric
+      - Imperial
+      type: string
+      description: |-
+        * `Metric` - metric
+        * `Imperial` - imperial
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+      required:
+      - username
+    WaterEnum:
+      enum:
+      - Salt
+      - Fresh
+      type: string
+      description: |-
+        * `Salt` - salt
+        * `Fresh` - fresh
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
