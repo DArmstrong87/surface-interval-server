@@ -62,21 +62,27 @@ class DiveView(ModelViewSet):
 
     def partial_update(self, request, pk):
         diver = Diver.objects.get(user=request.auth.user)
+        if diver is None:
+            return Response(
+                {"error": f"Diver of id {request.auth.user_id} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
         gear_set = GearSet.objects.get(diver=diver, pk=request.data["gear_set"])
 
         try:
             dive = Dive.objects.get(diver=diver, pk=pk)
-            dive.date = request.data["date"]
+            # dive.date = request.data["date"]
             dive.gear_set = gear_set
-            dive.country_state = request.data["location"]
-            dive.site = request.data["site"]
-            dive.water = request.data["water"]
-            dive.depth = request.data["depth"]
-            dive.time = request.data["time"]
-            dive.description = request.data["description"]
-            dive.start_pressure = request.data["start_pressure"]
-            dive.end_pressure = request.data["end_pressure"]
-            dive.tank_vol = request.data["tank_vol"]
+            # dive.location = request.data["location"]
+            # dive.site = request.data["site"]
+            # dive.water = request.data["water"]
+            # dive.depth = request.data["depth"]
+            # dive.time = request.data["time"]
+            # dive.description = request.data["description"]
+            # dive.start_pressure = request.data["start_pressure"]
+            # dive.end_pressure = request.data["end_pressure"]
+            # dive.tank_vol = request.data["tank_vol"]
             dive.save()
 
             serializer = DiveSerializer(dive, many=False, context={"request": request})

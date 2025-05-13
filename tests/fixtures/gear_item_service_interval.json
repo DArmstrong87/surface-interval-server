@@ -1,0 +1,32 @@
+[
+    {
+        "pk": 1,
+        "model": "surfaceintervalapi.gearitemserviceinterval",
+        "fields": {
+            "gear_item": 1,
+            "purchase_date": "2019-08-01",
+            "dives": 50,
+            "days": 365
+        }
+    },
+    {
+        "pk": 2,
+        "model": "surfaceintervalapi.gearitemserviceinterval",
+        "fields": {
+            "gear_item": 2,
+            "purchase_date": "2019-08-01",
+            "dives": 50,
+            "days": 365
+        }
+    },
+    {
+        "pk": 3,
+        "model": "surfaceintervalapi.gearitemserviceinterval",
+        "fields": {
+            "gear_item": 3,
+            "purchase_date": "2019-08-01",
+            "dives": 50,
+            "days": 365
+        }
+    }
+]

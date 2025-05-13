@@ -5,6 +5,7 @@ from .dive import Dive
 from .diver import Diver
 from .dive_specialty import DiveSpecialty
 from .favorite_dive import FavoriteDive
+from .gear_dive import GearDive
 from .gear_item import GearItem
 from .gear_item_service import GearItemService, GearItemServiceInterval
 from .gear_set import GearSet

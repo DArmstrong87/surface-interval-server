@@ -1,0 +1,72 @@
+[
+    {
+        "pk": 1,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "BCD"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Regulator"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Octopus"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Mask"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Fins"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Boots"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Computer"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Console"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Exposure Suit"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "surfaceintervalapi.geartype",
+        "fields": {
+            "name": "Tank"
+        }
+    }
+]

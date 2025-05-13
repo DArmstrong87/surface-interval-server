@@ -66,5 +66,10 @@ class Dive(models.Model):
         number = dives.index(self.id)
         return number + 1
 
+    def get_dive_gear_items(self) -> list:
+        if self.gear_set is not None:
+            return list(self.gear_set.gear_items.all())
+        return []
+
     def __str__(self):
         return f"{self.pk} | {self.site} | {self.diver.user.first_name} {self.diver.user.last_name}"

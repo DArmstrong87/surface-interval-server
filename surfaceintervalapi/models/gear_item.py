@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
-from surfaceintervalapi.models.dive import Dive
 from surfaceintervalapi.models.gear_item_service import GearItemService, GearItemServiceInterval
+from surfaceintervalapi.models import GearDive
 
 
 class GearItem(models.Model):
@@ -13,7 +13,7 @@ class GearItem(models.Model):
     )
     name = models.CharField(max_length=255)
 
-    def service_interval(self):
+    def get_service_interval(self):
         try:
             return GearItemServiceInterval.objects.get(gear_item=self)
         except GearItemServiceInterval.DoesNotExist:
@@ -28,46 +28,44 @@ class GearItem(models.Model):
 
     # Calculate dives or days since last service date.
     @property
-    def dives_since_last_service(self) -> int:
-        if self.service_interval() is None:
+    def dives_since_last_service(self) -> int | None:
+        if self.get_service_interval() is None:
             return None
 
-        count = 0
-        dives = []
         last_service_date = self.last_service_date
-        purchase_date = self.service_interval().purchase_date
+        purchase_date = self.get_service_interval().purchase_date
+
+        if last_service_date is None and purchase_date is None:
+            return None
+
+        last_service_or_purchase_date = last_service_date if last_service_date else None
 
         # If no service date, get dives since purchase date.
         if last_service_date is None and purchase_date is not None:
-            dives = Dive.objects.only("gear_set").filter(diver=self.diver, date__gte=purchase_date)
+            last_service_or_purchase_date = purchase_date
 
-        # Get dives since last_service_date
-        if last_service_date:
-            dives = Dive.objects.only("gear_set").filter(
-                diver=self.diver, date__gte=last_service_date
-            )
+        dive_count = GearDive.objects.filter(
+            gear_item=self, dive__diver=self.diver, dive__date__gte=last_service_or_purchase_date
+        ).count()
 
-        for dive in dives:
-            if dive.gear_set and self in dive.gear_set.gear_items.all():
-                count += 1
-
-        return count
+        return dive_count
 
     @property
     def days_since_last_service(self) -> int | None:
         days = None
         if self.last_service_date is not None:
             days = (timezone.now().date() - self.last_service_date).days
-        elif self.service_interval() is not None:
-            days = (timezone.now().date() - self.service_interval().purchase_date).days
+        elif self.get_service_interval() is not None:
+            days = (timezone.now().date() - self.get_service_interval().purchase_date).days
         return days
 
     @property
     def due_for_service_days(self) -> tuple[bool, int]:
-        service_interval = self.service_interval()
-        days_since_last_service = self.days_since_last_service()
-        if service_interval is None or days_since_last_service is None:
+        service_interval = self.get_service_interval()
+        if service_interval is None:
             return None
+
+        days_since_last_service = self.days_since_last_service
 
         days_past_due_service = days_since_last_service - service_interval.days
 
@@ -76,7 +74,7 @@ class GearItem(models.Model):
     @property
     def due_for_service_dives(self) -> int | None:
         days = None
-        service_interval = self.service_interval()
+        service_interval = self.get_service_interval()
         dives_since_last_service = self.dives_since_last_service
         if (
             service_interval is None

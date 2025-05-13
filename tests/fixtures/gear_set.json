@@ -1,0 +1,12 @@
+[
+    {
+        "pk": 1,
+        "model": "surfaceintervalapi.gearset",
+        "fields": {
+            "diver": 1,
+            "name": "Quarry Gear",
+            "gear_items": [1,2,3,4,5,6,7,8],
+            "weight": 18
+        }
+    }
+]
