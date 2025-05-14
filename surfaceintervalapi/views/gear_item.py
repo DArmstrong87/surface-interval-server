@@ -22,12 +22,24 @@ class GearItemView(ModelViewSet):
 
     def create(self, request):
         diver = Diver.objects.get(user=request.auth.user)
+        gear_type = None
+        custom_gear_type = None
+
         try:
-            gear_type = GearType.objects.get(pk=request.data["gear_type"])
-            custom_gear_type = None
-        except:
-            custom_gear_type = CustomGearType.objects.get(pk=request.data["custom_gear_type"])
-            gear_type = None
+            gear_type = GearType.objects.get(pk=request.data["gearType"])
+        except GearType.DoesNotExist:
+            try:
+                custom_gear_type = CustomGearType.objects.get(pk=request.data["customGearType"])
+            except CustomGearType.DoesNotExist:
+                return Response(
+                    {"error": "Either gear_type or custom_gear_type must be provided"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        except KeyError:
+            return Response(
+                {"error": "Either gearType or customGearType must be provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         try:
             gear_item = GearItem.objects.create(
@@ -35,8 +47,6 @@ class GearItemView(ModelViewSet):
                 name=request.data["name"],
                 gear_type=gear_type,
                 custom_gear_type=custom_gear_type,
-                purchase_date=request.data["purchase_date"],
-                last_serviced=request.data["last_serviced"],
             )
 
             serializer = GearItemSerializer(gear_item, many=False, context={"request": request})

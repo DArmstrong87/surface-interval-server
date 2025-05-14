@@ -16,9 +16,5 @@ class GearItemSerializer(serializers.ModelSerializer):
             "gear_type",
             "custom_gear_type",
             "name",
-            "dives_since_last_service",
-            "days_since_last_service",
-            "due_for_service_days",
-            "due_for_service_dives",
         )
         depth = 1
