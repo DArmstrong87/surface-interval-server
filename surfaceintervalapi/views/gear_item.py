@@ -21,30 +21,74 @@ class GearItemView(ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        diver = Diver.objects.get(user=request.auth.user)
+        try:
+            diver = Diver.objects.get(user=request.auth.user)
+            gear_type_id = request.data["gearTypeId"]
+            custom_gear_type_id = request.data["customGearTypeId"]
+            new_custom_gear_type = request.data["newCustomGearType"]
+            item_name = request.data["name"]
+        except Diver.DoesNotExist:
+            return Response(
+                {"error": f"Diver of ID {request.auth.user.id} not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except KeyError:
+            return Response(
+                {
+                    "error": "Request must contain name, gearTypeId, customGearTypeId and newCustomGearType"
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        use_gear_type = (
+            gear_type_id is not None
+            and custom_gear_type_id is None
+            and new_custom_gear_type is None
+        )
+        use_custom_gear_type = (
+            gear_type_id is None
+            and custom_gear_type_id is not None
+            and new_custom_gear_type is None
+        )
+        create_new_custom_gear_type = (
+            gear_type_id is None
+            and custom_gear_type_id is None
+            and new_custom_gear_type is not None
+        )
+
         gear_type = None
         custom_gear_type = None
 
-        try:
-            gear_type = GearType.objects.get(pk=request.data["gearType"])
-        except GearType.DoesNotExist:
+        if use_gear_type:
             try:
-                custom_gear_type = CustomGearType.objects.get(pk=request.data["customGearType"])
-            except CustomGearType.DoesNotExist:
+                gear_type = GearType.objects.get(pk=request.data["gearTypeId"])
+            except GearType.DoesNotExist:
                 return Response(
-                    {"error": "Either gear_type or custom_gear_type must be provided"},
+                    {"error": f"GearType of ID {gear_type_id} not found."},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-        except KeyError:
+        elif use_custom_gear_type:
+            try:
+                custom_gear_type = CustomGearType.objects.get(pk=custom_gear_type_id)
+            except CustomGearType.DoesNotExist:
+                return Response(
+                    {"error": "Custom GearType not found."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+        elif create_new_custom_gear_type:
+            custom_gear_type = CustomGearType.objects.create(diver=diver, name=new_custom_gear_type)
+        else:
             return Response(
-                {"error": "Either gearType or customGearType must be provided"},
+                {
+                    "error": "Conflicting data on whether to use existing GearType, Custom GearType or create new Custom GearType. Ensure only 1 is not null."
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
             gear_item = GearItem.objects.create(
                 diver=diver,
-                name=request.data["name"],
+                name=item_name,
                 gear_type=gear_type,
                 custom_gear_type=custom_gear_type,
             )
