@@ -1,19 +1,17 @@
 from rest_framework import serializers
 
-from surfaceintervalapi.models import GearItemServiceInterval
+from surfaceintervalapi.models import GearItemService
 from surfaceintervalapi.serializers.gear_item_serializer import GearItemSerializer
 
 
-class GearItemServiceIntervalSerializer(serializers.ModelSerializer):
+class GearItemServiceSerializer(serializers.ModelSerializer):
     gear_item = GearItemSerializer()
 
     class Meta:
-        model = GearItemServiceInterval
+        model = GearItemService
         fields = (
             "id",
             "gear_item",
-            "purchase_date",
-            "dive_interval",
-            "day_interval",
+            "service_date",
         )
         depth = 1

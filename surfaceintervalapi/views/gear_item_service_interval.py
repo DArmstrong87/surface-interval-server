@@ -3,12 +3,12 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
 from surfaceintervalapi.models import GearItem, GearItemServiceInterval
-from surfaceintervalapi.serializers import GearItemServiceSerializer
+from surfaceintervalapi.serializers import GearItemServiceIntervalSerializer
 
 
 class GearItemVServiceIntervalView(ModelViewSet):
     queryset = GearItemServiceInterval.objects.all()
-    serializer_class = GearItemServiceSerializer
+    serializer_class = GearItemServiceIntervalSerializer
 
     def create(self, request):
         gear_item_id = request.data.get("gearItemId")
@@ -17,8 +17,8 @@ class GearItemVServiceIntervalView(ModelViewSet):
             gear_item_service_interval = GearItemServiceInterval.objects.create(
                 gear_item=GearItem.objects.get(pk=gear_item_id),
                 purchase_date=request.data["purchaseDate"],
-                dives=request.data["dives"],
-                days=request.data["days"],
+                dive_interval=request.data["diveInterval"],
+                day_interval=request.data["dayInterval"],
             )
             serializer = self.serializer_class(
                 gear_item_service_interval, many=False, context={"request": request}

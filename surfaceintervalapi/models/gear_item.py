@@ -67,7 +67,7 @@ class GearItem(models.Model):
 
         days_since_last_service = self.days_since_last_service
 
-        days_past_due_service = days_since_last_service - service_interval.days
+        days_past_due_service = days_since_last_service - service_interval.day_interval
 
         return days_past_due_service
 

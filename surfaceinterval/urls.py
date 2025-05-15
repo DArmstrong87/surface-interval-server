@@ -14,6 +14,7 @@ from surfaceintervalapi.views import (
     CertCardView,
     GearSetView,
     GearItemView,
+    GearItemServiceView,
     GearItemVServiceIntervalView,
     GearTypeView,
     ImageView,
@@ -26,6 +27,7 @@ router.register(r"custom-gear-types", CustomGearTypeView, "specialty")
 router.register(r"dives", DiveView, "dive")
 router.register(r"divers", DiverView, "diver")
 router.register(r"gear-items", GearItemView, "gear-item")
+router.register(r"gear-item-service", GearItemServiceView, "gear-item-service")
 router.register(
     r"gear-item-service-interval", GearItemVServiceIntervalView, "gear-item-service-interval"
 )
