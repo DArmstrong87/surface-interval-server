@@ -5,13 +5,13 @@ from surfaceintervalapi.models import GearSet, GearItem, GearType, CustomGearTyp
 class GearTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = GearType
-        fields = ("name",)
+        fields = ("id", "name")
 
 
 class CustomGearTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomGearType
-        fields = ("name",)
+        fields = ("id", "name")
 
 
 class GearItemSerializer(serializers.ModelSerializer):

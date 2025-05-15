@@ -43,17 +43,17 @@ class GearItemView(ModelViewSet):
         use_gear_type = (
             gear_type_id is not None
             and custom_gear_type_id is None
-            and new_custom_gear_type is None
+            and (new_custom_gear_type is None or new_custom_gear_type == "")
         )
         use_custom_gear_type = (
             gear_type_id is None
             and custom_gear_type_id is not None
-            and new_custom_gear_type is None
+            and (new_custom_gear_type is None or new_custom_gear_type == "")
         )
         create_new_custom_gear_type = (
             gear_type_id is None
             and custom_gear_type_id is None
-            and new_custom_gear_type is not None
+            and (new_custom_gear_type is not None and new_custom_gear_type != "")
         )
 
         gear_type = None

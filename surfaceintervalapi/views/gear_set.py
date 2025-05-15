@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
-from surfaceintervalapi.models import Diver, GearSet, GearItem
+from surfaceintervalapi.models import Diver, GearSet
 from surfaceintervalapi.serializers import GearSetSerializer
 
 
@@ -21,47 +21,20 @@ class GearSetView(ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        diver = Diver.objects.get(user=request.auth.user)
-        bcd = GearItem.objects.get(pk=request.data["bcd"]) if "bcd" in request.data else None
-        regulator = (
-            GearItem.objects.get(pk=request.data["regulator"])
-            if "regulator" in request.data
-            else None
-        )
-        octopus = (
-            GearItem.objects.get(pk=request.data["octopus"]) if "octopus" in request.data else None
-        )
-        mask = GearItem.objects.get(pk=request.data["mask"]) if "mask" in request.data else None
-        fins = GearItem.objects.get(pk=request.data["fins"]) if "fins" in request.data else None
-        boots = GearItem.objects.get(pk=request.data["boots"]) if "bootd" in request.data else None
-        computer = (
-            GearItem.objects.get(pk=request.data["computer"])
-            if "computer" in request.data
-            else None
-        )
-        exposure_suit = (
-            GearItem.objects.get(pk=request.data["exposure_suit"])
-            if "exposure_suit" in request.data
-            else None
-        )
-        weights = request.data["weights"] if "weights" in request.data else None
-        tank = GearItem.objects.get(pk=request.data["tank"]) if "tank" in request.data else None
+        try:
+            name = request.data["name"]
+            gear_items = request.data["gearItemIds"]
+            weight = request.data["weight"]
+        except KeyError as ex:
+            return Response(
+                {"error": f"Missing required fields: {str(ex)}"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
-            gear_set = GearSet.objects.create(
-                diver=diver,
-                name=request.data["name"],
-                bcd=bcd,
-                regulator=regulator,
-                octopus=octopus,
-                mask=mask,
-                fins=fins,
-                boots=boots,
-                computer=computer,
-                exposure_suit=exposure_suit,
-                weights=weights,
-                tank=tank,
-            )
+            diver = Diver.objects.get(user=request.auth.user)
+            gear_set = GearSet.objects.create(diver=diver, name=name, weight=weight)
+            gear_set.gear_items.set(gear_items)
+            gear_set.save()
 
             serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -69,59 +42,23 @@ class GearSetView(ModelViewSet):
         except Exception as ex:
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def partial_update(self, request, pk):
+    def update(self, request, pk):
         try:
-            gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
-            bcd = GearItem.objects.get(pk=request.data["bcd"]) if "bcd" in request.data else None
-            regulator = (
-                GearItem.objects.get(pk=request.data["regulator"])
-                if "regulator" in request.data
-                else None
-            )
-            octopus = (
-                GearItem.objects.get(pk=request.data["octopus"])
-                if "octopus" in request.data
-                else None
-            )
-            mask = GearItem.objects.get(pk=request.data["mask"]) if "mask" in request.data else None
-            fins = GearItem.objects.get(pk=request.data["fins"]) if "fins" in request.data else None
-            boots = (
-                GearItem.objects.get(pk=request.data["boots"]) if "bootd" in request.data else None
-            )
-            computer = (
-                GearItem.objects.get(pk=request.data["computer"])
-                if "computer" in request.data
-                else None
-            )
-            exposure_suit = (
-                GearItem.objects.get(pk=request.data["exposure_suit"])
-                if "exposure_suit" in request.data
-                else None
-            )
-            tank = GearItem.objects.get(pk=request.data["tank"]) if "tank" in request.data else None
-            weights = request.data["weights"] if "weights" in request.data else None
-
-            gear_set.name = request.data["name"]
-            gear_set.bcd = bcd
-            gear_set.regulator = regulator
-            gear_set.octopus = octopus
-            gear_set.mask = mask
-            gear_set.fins = fins
-            gear_set.boots = boots
-            gear_set.computer = computer
-            gear_set.exposure_suit = exposure_suit
-            gear_set.weights = weights
-            gear_set.tank = tank
-            gear_set.save()
-
-            serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
+            name = request.data["name"]
+            gear_items = request.data["gearItemIds"]
+            weight = request.data["weight"]
+        except KeyError as ex:
             return Response(
-                {"message": "Gear set updated!", "gear_set": serializer.data},
-                status=status.HTTP_204_NO_CONTENT,
+                {"error": f"Missing required fields: {str(ex)}"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        except Exception as ex:
-            return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
+        gear_set.name = name
+        gear_set.weight = weight
+        gear_set.gear_items.set(gear_items)
+        gear_set.save()
+
+        return Response({"message": "Gear set updated!"}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
         try:

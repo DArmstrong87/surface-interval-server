@@ -20,6 +20,10 @@ class GearItem(models.Model):
             return None
 
     @property
+    def service_tracking(self) -> bool:
+        return self.get_service_interval() is not None
+
+    @property
     def last_service_date(self) -> str | None:
         item_service = (
             GearItemService.objects.filter(gear_item=self).order_by("service_date").first()
