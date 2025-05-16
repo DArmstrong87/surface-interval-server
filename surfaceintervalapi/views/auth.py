@@ -27,16 +27,23 @@ def login_user(request):
     Method arguments:
     request -- The full HTTP request object
     """
-    username = request.data["username"]
+    email = request.data["email"]
     password = request.data["password"]
     # Use the built-in authenticate method to verify
     # authenticate returns the user object or None if no user is found
+    username = None
+    try:
+        user = User.objects.get(email=email)
+        username = user.username
+    except User.DoesNotExist:
+        return Response({"valid": False})
+
     authenticated_user = authenticate(username=username, password=password)
     # If authentication was successful, respond with their token
     if authenticated_user is not None:
         token, created = Token.objects.get_or_create(user=authenticated_user)
         if created:
-            print(f"Token created for user {username}")
+            print(f"Token created for user {authenticated_user.username}")
         data = {"valid": True, "token": token.key}
         return Response(data)
     else:

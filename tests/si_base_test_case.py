@@ -13,7 +13,9 @@ class SiBaseTestCase(TestCase):
         self.client = APIClient()
 
         print_test_action("Creating test user for SI Base Test Case")
-        self.user = User.objects.create_user(username="TestUser", password="123")
+        self.user = User.objects.create_user(
+            username="TestUser", email="test@example.com", password="123"
+        )
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
 
@@ -24,6 +26,7 @@ class SiBaseTestCase(TestCase):
 
     def test_setup(self):
         self.assertTrue(User.objects.filter(username="TestUser").exists())
+        self.assertTrue(User.objects.filter(email="test@example.com").exists())
         self.assertTrue(Diver.objects.filter(user=self.user).exists())
         self.assertTrue(self.diver.user == self.user)
         self.assertTrue(self.diver.units == IMPERIAL_UNIT)
