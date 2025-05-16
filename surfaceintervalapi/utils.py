@@ -23,8 +23,6 @@ def get_air_consumption_cu_ft_min(dive, units):
     if start_pressure is None or end_pressure is None:
         return None
 
-    print(dive)
-
     # Default tank volume to 80 Cubic Feet if None
     tank_vol = dive.get("tank_vol", DEFAULT_TANK_VOLUME)  # Cubic feet
     tank_vol = DEFAULT_TANK_VOLUME if tank_vol is None else tank_vol
