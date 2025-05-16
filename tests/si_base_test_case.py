@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from surfaceintervalapi.models import Diver
 from surfaceintervalapi.types import IMPERIAL_UNIT
-from tests.utils import print_test_info, print_assert_that, print_test_action, print_test_setup
+from tests.utils import print_test_action, print_test_setup
 
 
 class SiBaseTestCase(TestCase):
@@ -23,11 +23,11 @@ class SiBaseTestCase(TestCase):
         )
 
     def test_setup(self):
-        print_test_info("Testing SI Base Test Case Setup")
-        print_assert_that("Test user was created")
         self.assertTrue(User.objects.filter(username="TestUser").exists())
-        print_assert_that("Test diver was created")
         self.assertTrue(Diver.objects.filter(user=self.user).exists())
+        self.assertTrue(self.diver.user == self.user)
+        self.assertTrue(self.diver.units == IMPERIAL_UNIT)
+        self.assertTrue(self.diver.default_gear_set is None)
 
     def tearDown(self):
         self.user.delete()
