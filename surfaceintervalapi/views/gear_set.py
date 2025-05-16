@@ -11,117 +11,91 @@ class GearSetView(ModelViewSet):
     serializer_class = GearSetSerializer
 
     def retrieve(self, request, pk):
-        gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
-        serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
-        return Response(serializer.data)
+        try:
+            gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
+            serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
+            return Response(serializer.data)
+        except GearSet.DoesNotExist:
+            return Response(
+                {"error": "GearSet matching query does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
     def list(self, request):
-        gear_sets = GearSet.objects.filter(diver__user=request.auth.user)
-        serializer = GearSetSerializer(gear_sets, many=True, context={"request": request})
-        return Response(serializer.data)
+        try:
+            gear_sets = GearSet.objects.filter(diver__user=request.auth.user)
+            serializer = GearSetSerializer(gear_sets, many=True, context={"request": request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return Response(
+                {"error": f"An error occurred while retrieving gear sets: {str(ex)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     def create(self, request):
-        diver = Diver.objects.get(user=request.auth.user)
-        bcd = GearItem.objects.get(pk=request.data["bcd"]) if "bcd" in request.data else None
-        regulator = (
-            GearItem.objects.get(pk=request.data["regulator"])
-            if "regulator" in request.data
-            else None
-        )
-        octopus = (
-            GearItem.objects.get(pk=request.data["octopus"]) if "octopus" in request.data else None
-        )
-        mask = GearItem.objects.get(pk=request.data["mask"]) if "mask" in request.data else None
-        fins = GearItem.objects.get(pk=request.data["fins"]) if "fins" in request.data else None
-        boots = GearItem.objects.get(pk=request.data["boots"]) if "bootd" in request.data else None
-        computer = (
-            GearItem.objects.get(pk=request.data["computer"])
-            if "computer" in request.data
-            else None
-        )
-        exposure_suit = (
-            GearItem.objects.get(pk=request.data["exposure_suit"])
-            if "exposure_suit" in request.data
-            else None
-        )
-        weights = request.data["weights"] if "weights" in request.data else None
-        tank = GearItem.objects.get(pk=request.data["tank"]) if "tank" in request.data else None
+        try:
+            name = request.data["name"]
+            gear_items = request.data["gearItemIds"]
+            weight = request.data["weight"]
+        except KeyError as ex:
+            return Response(
+                {"error": f"Missing required fields: {str(ex)}"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
-            gear_set = GearSet.objects.create(
-                diver=diver,
-                name=request.data["name"],
-                bcd=bcd,
-                regulator=regulator,
-                octopus=octopus,
-                mask=mask,
-                fins=fins,
-                boots=boots,
-                computer=computer,
-                exposure_suit=exposure_suit,
-                weights=weights,
-                tank=tank,
+            diver = Diver.objects.get(user=request.auth.user)
+
+            # Verify all gear items exist and belong to the user
+            gear_items_queryset = GearItem.objects.filter(
+                id__in=gear_items, diver__user=request.auth.user
             )
+            if len(gear_items_queryset) != len(gear_items):
+                return Response(
+                    {"error": "One or more gear items not found"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            gear_set = GearSet.objects.create(diver=diver, name=name, weight=weight)
+            gear_set.gear_items.set(gear_items_queryset)
+            gear_set.save()
 
             serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         except Exception as ex:
-            return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def partial_update(self, request, pk):
+    def update(self, request, pk):
+        try:
+            name = request.data["name"]
+            gear_items = request.data["gearItemIds"]
+            weight = request.data["weight"]
+        except KeyError as ex:
+            return Response(
+                {"error": f"Missing required fields: {str(ex)}"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Verify all gear items exist and belong to the user
+        gear_items_queryset = GearItem.objects.filter(
+            id__in=gear_items, diver__user=request.auth.user
+        )
+        if len(gear_items_queryset) != len(gear_items):
+            return Response(
+                {"error": "One or more gear items not found"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         try:
             gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
-            bcd = GearItem.objects.get(pk=request.data["bcd"]) if "bcd" in request.data else None
-            regulator = (
-                GearItem.objects.get(pk=request.data["regulator"])
-                if "regulator" in request.data
-                else None
-            )
-            octopus = (
-                GearItem.objects.get(pk=request.data["octopus"])
-                if "octopus" in request.data
-                else None
-            )
-            mask = GearItem.objects.get(pk=request.data["mask"]) if "mask" in request.data else None
-            fins = GearItem.objects.get(pk=request.data["fins"]) if "fins" in request.data else None
-            boots = (
-                GearItem.objects.get(pk=request.data["boots"]) if "bootd" in request.data else None
-            )
-            computer = (
-                GearItem.objects.get(pk=request.data["computer"])
-                if "computer" in request.data
-                else None
-            )
-            exposure_suit = (
-                GearItem.objects.get(pk=request.data["exposure_suit"])
-                if "exposure_suit" in request.data
-                else None
-            )
-            tank = GearItem.objects.get(pk=request.data["tank"]) if "tank" in request.data else None
-            weights = request.data["weights"] if "weights" in request.data else None
-
-            gear_set.name = request.data["name"]
-            gear_set.bcd = bcd
-            gear_set.regulator = regulator
-            gear_set.octopus = octopus
-            gear_set.mask = mask
-            gear_set.fins = fins
-            gear_set.boots = boots
-            gear_set.computer = computer
-            gear_set.exposure_suit = exposure_suit
-            gear_set.weights = weights
-            gear_set.tank = tank
+            gear_set.name = name
+            gear_set.weight = weight
+            gear_set.gear_items.set(gear_items_queryset)
             gear_set.save()
 
-            serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
-            return Response(
-                {"message": "Gear set updated!", "gear_set": serializer.data},
-                status=status.HTTP_204_NO_CONTENT,
-            )
+            return Response({"message": "Gear set updated!"}, status=status.HTTP_204_NO_CONTENT)
 
-        except Exception as ex:
-            return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except GearSet.DoesNotExist as ex:
+            return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def destroy(self, request, pk=None):
         try:

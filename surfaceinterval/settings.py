@@ -99,8 +99,8 @@ WSGI_APPLICATION = "surfaceinterval.wsgi.application"
 POSTGRES_DB = config("POSTGRES_DB", default="surface-interval-db")
 POSTGRES_USER = config("POSTGRES_USER", default="surfaceinterval")
 POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default="")
-DB_HOST = config("DB_HOST_READ", default="db")
-DB_PORT = config("DB_HOST_READ", default="5432")
+DB_HOST = config("DB_HOST", default="127.0.0.1")
+DB_PORT = config("DB_PORT", default="5432")
 
 
 DATABASES = {

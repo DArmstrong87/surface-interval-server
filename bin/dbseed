@@ -5,3 +5,8 @@ python manage.py loaddata --ignorenonexistent tests/fixtures/divers.json
 python manage.py loaddata --ignorenonexistent tests/fixtures/dives.json
 python manage.py loaddata --ignorenonexistent tests/fixtures/specialties.json
 python manage.py loaddata --ignorenonexistent tests/fixtures/dive_specialties.json
+python manage.py loaddata --ignorenonexistent tests/fixtures/gear_types
+python manage.py loaddata --ignorenonexistent tests/fixtures/gear_items
+python manage.py loaddata --ignorenonexistent tests/fixtures/gear_item_service
+python manage.py loaddata --ignorenonexistent tests/fixtures/gear_item_service_interval
+python manage.py loaddata --ignorenonexistent tests/fixtures/gear_set

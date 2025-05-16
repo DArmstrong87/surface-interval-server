@@ -1,0 +1,82 @@
+[
+    {
+        "pk": 1,
+        "model": "surfaceintervalapi.gearitem",
+        "fields": {
+            "diver": 1,
+            "gear_type": 1,
+            "custom_gear_type": null,
+            "name": "TUSA Soverin Alpha BC"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "surfaceintervalapi.gearitem",
+        "fields": {
+            "diver": 1,
+            "gear_type": 2,
+            "custom_gear_type": null,
+            "name": "Sherwood Oasis"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "surfaceintervalapi.gearitem",
+        "fields": {
+            "diver": 1,
+            "gear_type": 3,
+            "custom_gear_type": null,
+            "name": "Sherwood Octo"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "surfaceintervalapi.gearitem",
+        "fields": {
+            "diver": 1,
+            "gear_type": 4,
+            "custom_gear_type": null,
+            "name": "Genesis Triview"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "surfaceintervalapi.gearitem",
+        "fields": {
+            "diver": 1,
+            "gear_type": 5,
+            "custom_gear_type": null,
+            "name": "Sherwood Triton Pro"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "surfaceintervalapi.gearitem",
+        "fields": {
+            "diver": 1,
+            "gear_type": 6,
+            "custom_gear_type": null,
+            "name": "Bare 7mm Ultrawarmth Boots"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "surfaceintervalapi.gearitem",
+        "fields": {
+            "diver": 1,
+            "gear_type": 7,
+            "custom_gear_type": null,
+            "name": "Amphos Air"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "surfaceintervalapi.gearitem",
+        "fields": {
+            "diver": 1,
+            "gear_type": 9,
+            "custom_gear_type": null,
+            "name": "Akona 7mm Quantum Stretch Wetsuit"
+        }
+    }
+]

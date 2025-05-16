@@ -14,8 +14,11 @@ from surfaceintervalapi.views import (
     CertCardView,
     GearSetView,
     GearItemView,
+    GearItemServiceView,
+    GearItemVServiceIntervalView,
     GearTypeView,
     ImageView,
+    HealthCheckView,
 )
 
 
@@ -25,6 +28,10 @@ router.register(r"custom-gear-types", CustomGearTypeView, "specialty")
 router.register(r"dives", DiveView, "dive")
 router.register(r"divers", DiverView, "diver")
 router.register(r"gear-items", GearItemView, "gear-item")
+router.register(r"gear-item-services", GearItemServiceView, "gear-item-service")
+router.register(
+    r"gear-item-service-intervals", GearItemVServiceIntervalView, "gear-item-service-interval"
+)
 router.register(r"gear-sets", GearSetView, "gear-set")
 router.register(r"gear-types", GearTypeView, "gear-type")
 router.register(r"images", ImageView, "image")
@@ -35,6 +42,7 @@ urlpatterns = [
     path("", include(router.urls)),
     path("register", register_user),
     path("login", login_user, name="login"),
+    path("healthcheck", HealthCheckView.as_view(), name="healthcheck"),
     # Generate raw OpenAPI schema (YAML or JSON)
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Interactive Swagger UI

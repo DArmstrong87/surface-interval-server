@@ -62,26 +62,24 @@ class DiveView(ModelViewSet):
 
     def partial_update(self, request, pk):
         diver = Diver.objects.get(user=request.auth.user)
-        gear_set = GearSet.objects.get(diver=diver, pk=request.data["gear_set"])
+        if diver is None:
+            return Response(
+                {"error": f"Diver of id {request.auth.user_id} does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        submitted_keys = request.data.keys()
 
         try:
             dive = Dive.objects.get(diver=diver, pk=pk)
-            dive.date = request.data["date"]
-            dive.gear_set = gear_set
-            dive.country_state = request.data["location"]
-            dive.site = request.data["site"]
-            dive.water = request.data["water"]
-            dive.depth = request.data["depth"]
-            dive.time = request.data["time"]
-            dive.description = request.data["description"]
-            dive.start_pressure = request.data["start_pressure"]
-            dive.end_pressure = request.data["end_pressure"]
-            dive.tank_vol = request.data["tank_vol"]
+
+            for key in submitted_keys:
+                if hasattr(dive, key):
+                    setattr(dive, key, request.data.get(key))
             dive.save()
 
             serializer = DiveSerializer(dive, many=False, context={"request": request})
             return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
-
         except Exception as ex:
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

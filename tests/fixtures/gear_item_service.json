@@ -1,0 +1,10 @@
+[
+    {
+        "pk": 1,
+        "model": "surfaceintervalapi.gearitemservice",
+        "fields": {
+            "gear_item": 1,
+            "service_date": "2023-10-31"
+        }
+    }
+]
