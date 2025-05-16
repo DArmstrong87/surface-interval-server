@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
-from surfaceintervalapi.models import Diver, GearSet
+from surfaceintervalapi.models import Diver, GearSet, GearItem
 from surfaceintervalapi.serializers import GearSetSerializer
 
 
@@ -11,14 +11,26 @@ class GearSetView(ModelViewSet):
     serializer_class = GearSetSerializer
 
     def retrieve(self, request, pk):
-        gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
-        serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
-        return Response(serializer.data)
+        try:
+            gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
+            serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
+            return Response(serializer.data)
+        except GearSet.DoesNotExist:
+            return Response(
+                {"error": "GearSet matching query does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
     def list(self, request):
-        gear_sets = GearSet.objects.filter(diver__user=request.auth.user)
-        serializer = GearSetSerializer(gear_sets, many=True, context={"request": request})
-        return Response(serializer.data)
+        try:
+            gear_sets = GearSet.objects.filter(diver__user=request.auth.user)
+            serializer = GearSetSerializer(gear_sets, many=True, context={"request": request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return Response(
+                {"error": f"An error occurred while retrieving gear sets: {str(ex)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     def create(self, request):
         try:
@@ -32,15 +44,26 @@ class GearSetView(ModelViewSet):
 
         try:
             diver = Diver.objects.get(user=request.auth.user)
+
+            # Verify all gear items exist and belong to the user
+            gear_items_queryset = GearItem.objects.filter(
+                id__in=gear_items, diver__user=request.auth.user
+            )
+            if len(gear_items_queryset) != len(gear_items):
+                return Response(
+                    {"error": "One or more gear items not found"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
             gear_set = GearSet.objects.create(diver=diver, name=name, weight=weight)
-            gear_set.gear_items.set(gear_items)
+            gear_set.gear_items.set(gear_items_queryset)
             gear_set.save()
 
             serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         except Exception as ex:
-            return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error": str(ex)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk):
         try:
@@ -52,13 +75,27 @@ class GearSetView(ModelViewSet):
                 {"error": f"Missing required fields: {str(ex)}"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
-        gear_set.name = name
-        gear_set.weight = weight
-        gear_set.gear_items.set(gear_items)
-        gear_set.save()
+        # Verify all gear items exist and belong to the user
+        gear_items_queryset = GearItem.objects.filter(
+            id__in=gear_items, diver__user=request.auth.user
+        )
+        if len(gear_items_queryset) != len(gear_items):
+            return Response(
+                {"error": "One or more gear items not found"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        return Response({"message": "Gear set updated!"}, status=status.HTTP_204_NO_CONTENT)
+        try:
+            gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
+            gear_set.name = name
+            gear_set.weight = weight
+            gear_set.gear_items.set(gear_items_queryset)
+            gear_set.save()
+
+            return Response({"message": "Gear set updated!"}, status=status.HTTP_204_NO_CONTENT)
+
+        except GearSet.DoesNotExist as ex:
+            return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def destroy(self, request, pk=None):
         try:

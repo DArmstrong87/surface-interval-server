@@ -18,6 +18,7 @@ from surfaceintervalapi.views import (
     GearItemVServiceIntervalView,
     GearTypeView,
     ImageView,
+    HealthCheckView,
 )
 
 
@@ -41,6 +42,7 @@ urlpatterns = [
     path("", include(router.urls)),
     path("register", register_user),
     path("login", login_user, name="login"),
+    path("healthcheck", HealthCheckView.as_view(), name="healthcheck"),
     # Generate raw OpenAPI schema (YAML or JSON)
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Interactive Swagger UI
