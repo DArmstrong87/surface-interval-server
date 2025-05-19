@@ -52,3 +52,19 @@ class GearItemSerializer(serializers.ModelSerializer):
             "due_for_service_dives",
         )
         depth = 1
+
+
+class GearItemSimpleSerializer(serializers.ModelSerializer):
+    gear_type = GearTypeSerializer()
+    custom_gear_type = CustomGearTypeSerializer()
+
+    class Meta:
+        model = GearItem
+        fields = (
+            "id",
+            "gear_type",
+            "custom_gear_type",
+            "name",
+            "service_tracking",
+        )
+        depth = 1

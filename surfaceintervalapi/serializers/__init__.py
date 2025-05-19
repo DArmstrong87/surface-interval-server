@@ -4,7 +4,7 @@ from .custom_gear_type_serializer import CustomGearTypeSerializer
 from .dive_serializer import DiveSerializer, FavoriteDiveSerializer
 from .diver_serializer import DiverSerializer
 from .dive_specialty_serializer import DiveSpecialtySerializer
-from .gear_item_serializer import GearItemSerializer
+from .gear_item_serializer import GearItemSerializer, GearItemSimpleSerializer
 from .gear_item_service_serializer import GearItemServiceSerializer
 from .gear_item_service_interval_serializer import GearItemServiceIntervalSerializer
 from .gear_set_serializer import GearSetSerializer
