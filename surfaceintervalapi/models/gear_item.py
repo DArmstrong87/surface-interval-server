@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from typing import Optional, List
+from datetime import date
 
 from surfaceintervalapi.models.gear_item_service import GearItemService, GearItemServiceInterval
 from surfaceintervalapi.models import GearDive
@@ -13,7 +15,8 @@ class GearItem(models.Model):
     )
     name = models.CharField(max_length=255)
 
-    def get_service_interval(self):
+    @property
+    def service_interval(self) -> Optional[GearItemServiceInterval]:
         try:
             return GearItemServiceInterval.objects.get(gear_item=self)
         except GearItemServiceInterval.DoesNotExist:
@@ -21,84 +24,74 @@ class GearItem(models.Model):
 
     @property
     def service_tracking(self) -> bool:
-        return self.get_service_interval() is not None
+        return self.service_interval is not None
+
+    def get_service_history(self) -> List[GearItemService]:
+        return GearItemService.objects.filter(gear_item=self).order_by("-service_date")
 
     @property
-    def last_service_date(self) -> str | None:
-        item_service = (
-            GearItemService.objects.filter(gear_item=self).order_by("service_date").first()
-        )
-        return None if item_service is None else item_service.service_date
+    def service_history(self) -> List[GearItemService]:
+        return self.get_service_history() if self.service_tracking else []
 
-    # Calculate dives or days since last service date.
     @property
-    def dives_since_last_service(self) -> int | None:
-        if self.get_service_interval() is None:
+    def last_service_date(self) -> Optional[str]:
+        item_service = self.get_service_history().first()
+        return item_service.service_date if item_service else None
+
+    def _get_reference_date(self) -> Optional[date]:
+        """
+        Get the reference date for service calculations (last service or purchase date)
+        If the gear item is tracking service, and the last service date is before the purchase date,
+        then the reference date is the last service date, otherwise, the reference date is the purchase date.
+        """
+        if self.service_tracking:
+            if self.last_service_date:
+                return self.last_service_date
+            else:
+                return self.service_interval.purchase_date
+        return None
+
+    @property
+    def dives_since_last_service(self) -> Optional[int]:
+        if not self.service_interval:
             return None
 
-        last_service_date = self.last_service_date
-        purchase_date = self.get_service_interval().purchase_date
-
-        if last_service_date is None and purchase_date is None:
+        reference_date = self._get_reference_date()
+        if not reference_date:
             return None
 
-        last_service_or_purchase_date = last_service_date if last_service_date else None
-
-        # If no service date, get dives since purchase date.
-        if last_service_date is None and purchase_date is not None:
-            last_service_or_purchase_date = purchase_date
-
-        dive_count = GearDive.objects.filter(
-            gear_item=self, dive__diver=self.diver, dive__date__gte=last_service_or_purchase_date
+        return GearDive.objects.filter(
+            gear_item=self, dive__diver=self.diver, dive__date__gte=reference_date
         ).count()
 
-        return dive_count
-
-    @property
-    def days_since_last_service(self) -> int | None:
-        days = None
-        if self.last_service_date is not None:
-            days = (timezone.now().date() - self.last_service_date).days
-        elif self.get_service_interval() is not None:
-            days = (timezone.now().date() - self.get_service_interval().purchase_date).days
-        return days
-
-    @property
-    def due_for_service_days(self) -> tuple[bool, int]:
-        service_interval = self.get_service_interval()
-        if service_interval is None:
+    def get_days_since_last_service(self, tz=None) -> Optional[int]:
+        reference_date = self._get_reference_date()
+        if not reference_date:
             return None
 
-        days_since_last_service = self.days_since_last_service
+        current_date = timezone.now().date() if tz is None else timezone.now().astimezone(tz).date()
+        return (current_date - reference_date).days
 
-        days_past_due_service = days_since_last_service - service_interval.day_interval
+    def get_due_for_service_days(self, tz=None) -> Optional[int]:
+        if not self.service_interval:
+            return None
 
-        return days_past_due_service
+        days_since = self.get_days_since_last_service(tz=tz)
+        if days_since is None:
+            return None
+
+        return days_since - self.service_interval.day_interval
 
     @property
-    def due_for_service_dives(self) -> int | None:
-        days = None
-        service_interval = self.get_service_interval()
-        dives_since_last_service = self.dives_since_last_service
-        if (
-            service_interval is None
-            or dives_since_last_service is None
-            or service_interval.purchase_date is None
-        ):
-            return days
+    def due_for_service_dives(self) -> Optional[int]:
+        if not self.service_interval or not self.service_interval.purchase_date:
+            return None
 
-        gear_type_name = self.gear_type.name
-        custom_gear_type_name = self.custom_gear_type.name if self.custom_gear_type else None
+        dives_since = self.dives_since_last_service
+        if dives_since is None:
+            return None
 
-        items_to_service_every_100_dives = ["BCD", "Tank", "Regulator", "Octopus"]
-
-        if (
-            gear_type_name in items_to_service_every_100_dives
-            or custom_gear_type_name in items_to_service_every_100_dives
-        ):
-            days_since = self.dives_since_last_service
-            days = days_since - 100
-        return days
+        return dives_since - self.service_interval.dive_interval
 
     def __str__(self):
         return f"{self.name}"

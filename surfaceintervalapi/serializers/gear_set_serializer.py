@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from surfaceintervalapi.models import GearSet, GearItem, GearType, CustomGearType
+from surfaceintervalapi.models import GearSet, GearType, CustomGearType
+from surfaceintervalapi.serializers import GearItemSimpleSerializer
 
 
 class GearTypeSerializer(serializers.ModelSerializer):
@@ -14,27 +15,8 @@ class CustomGearTypeSerializer(serializers.ModelSerializer):
         fields = ("id", "name")
 
 
-class GearItemSerializer(serializers.ModelSerializer):
-    gear_type = GearTypeSerializer()
-    custom_gear_type = CustomGearTypeSerializer()
-
-    class Meta:
-        model = GearItem
-        fields = (
-            "id",
-            "gear_type",
-            "custom_gear_type",
-            "name",
-            "dives_since_last_service",
-            "days_since_last_service",
-            "due_for_service_days",
-            "due_for_service_dives",
-        )
-        depth = 1
-
-
 class GearSetSerializer(serializers.ModelSerializer):
-    gear_items = GearItemSerializer(many=True)
+    gear_items = GearItemSimpleSerializer(many=True)
 
     class Meta:
         model = GearSet
@@ -44,4 +26,3 @@ class GearSetSerializer(serializers.ModelSerializer):
             "gear_items",
             "weight",
         )
-        depth = 1

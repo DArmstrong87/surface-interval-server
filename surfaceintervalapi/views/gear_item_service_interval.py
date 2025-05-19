@@ -6,7 +6,7 @@ from surfaceintervalapi.models import GearItem, GearItemServiceInterval
 from surfaceintervalapi.serializers import GearItemServiceIntervalSerializer
 
 
-class GearItemVServiceIntervalView(ModelViewSet):
+class GearItemServiceIntervalView(ModelViewSet):
     queryset = GearItemServiceInterval.objects.all()
     serializer_class = GearItemServiceIntervalSerializer
 
@@ -46,3 +46,17 @@ class GearItemVServiceIntervalView(ModelViewSet):
 
         except GearItemServiceInterval.DoesNotExist as ex:
             return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+    def retrieve(self, request, pk=None):
+        try:
+            gear_item_service_interval = GearItemServiceInterval.objects.get(
+                pk=pk, gear_item__diver__user=request.auth.user
+            )
+            serializer = self.serializer_class(
+                gear_item_service_interval, many=False, context={"request": request}
+            )
+            return Response(serializer.data)
+        except GearItemServiceInterval.DoesNotExist as ex:
+            return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
