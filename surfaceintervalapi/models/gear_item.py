@@ -39,11 +39,16 @@ class GearItem(models.Model):
         return item_service.service_date if item_service else None
 
     def _get_reference_date(self) -> Optional[date]:
-        """Get the reference date for service calculations (last service or purchase date)."""
-        if self.last_service_date:
-            return self.last_service_date
-        if self.service_interval and self.service_interval.purchase_date:
-            return self.service_interval.purchase_date
+        """
+        Get the reference date for service calculations (last service or purchase date)
+        If the gear item is tracking service, and the last service date is before the purchase date,
+        then the reference date is the last service date, otherwise, the reference date is the purchase date.
+        """
+        if self.service_tracking:
+            if self.last_service_date:
+                return self.last_service_date
+            else:
+                return self.service_interval.purchase_date
         return None
 
     @property
@@ -59,7 +64,7 @@ class GearItem(models.Model):
             gear_item=self, dive__diver=self.diver, dive__date__gte=reference_date
         ).count()
 
-    def days_since_last_service(self, tz=None) -> Optional[int]:
+    def get_days_since_last_service(self, tz=None) -> Optional[int]:
         reference_date = self._get_reference_date()
         if not reference_date:
             return None
@@ -67,11 +72,11 @@ class GearItem(models.Model):
         current_date = timezone.now().date() if tz is None else timezone.now().astimezone(tz).date()
         return (current_date - reference_date).days
 
-    def due_for_service_days(self, tz=None) -> Optional[int]:
+    def get_due_for_service_days(self, tz=None) -> Optional[int]:
         if not self.service_interval:
             return None
 
-        days_since = self.days_since_last_service(tz=tz)
+        days_since = self.get_days_since_last_service(tz=tz)
         if days_since is None:
             return None
 
@@ -86,7 +91,7 @@ class GearItem(models.Model):
         if dives_since is None:
             return None
 
-        return self.service_interval.dive_interval - dives_since
+        return dives_since - self.service_interval.dive_interval
 
     def __str__(self):
         return f"{self.name}"

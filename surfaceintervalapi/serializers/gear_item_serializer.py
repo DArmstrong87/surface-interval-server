@@ -29,11 +29,11 @@ class GearItemSerializer(serializers.ModelSerializer):
 
     def get_days_since_last_service(self, instance):
         tz = self._get_timezone()
-        return instance.days_since_last_service(tz=tz)
+        return instance.get_days_since_last_service(tz=tz)
 
     def get_due_for_service_days(self, instance):
         tz = self._get_timezone()
-        return instance.due_for_service_days(tz=tz)
+        return instance.get_due_for_service_days(tz=tz)
 
     class Meta:
         model = GearItem
