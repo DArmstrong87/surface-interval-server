@@ -50,10 +50,33 @@ class GearItemServiceView(ModelViewSet):
 
     def destroy(self, request, pk=None):
         try:
-            gear_item = GearItemService.objects.get(pk=pk, gear_item__diver__user=request.auth.user)
-            gear_item.delete()
+            gear_item_service = GearItemService.objects.get(
+                pk=pk, gear_item__diver__user=request.auth.user
+            )
+            gear_item_service.delete()
 
             return Response({"GearItemService deleted"}, status=status.HTTP_204_NO_CONTENT)
 
+        except GearItemService.DoesNotExist as ex:
+            return Response({"error": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def list(self, request):
+        try:
+            gear_item_id = request.query_params.get("gearItemId")
+            if gear_item_id:
+                gear_item_services = GearItemService.objects.filter(
+                    gear_item__id=gear_item_id, gear_item__diver__user=request.auth.user
+                ).order_by("-service_date")
+            else:
+                return Response(
+                    {"error": "gearItemId is required"}, status=status.HTTP_400_BAD_REQUEST
+                )
+
+            serializer = self.serializer_class(
+                gear_item_services, many=True, context={"request": request}
+            )
+            return Response(serializer.data)
         except GearItemService.DoesNotExist as ex:
             return Response({"error": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)

@@ -12,7 +12,10 @@ class GearItemView(ModelViewSet):
 
     def retrieve(self, request, pk):
         gear_item = GearItem.objects.get(pk=pk, diver__user=request.auth.user)
-        serializer = GearItemSerializer(gear_item, many=False, context={"request": request})
+        tz = request.query_params.get("timezone")
+        serializer = GearItemSerializer(
+            gear_item, many=False, context={"request": request, "timezone": tz}
+        )
         return Response(serializer.data)
 
     def list(self, request):
