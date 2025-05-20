@@ -32,8 +32,8 @@ I originally built Surface Interval as my frontend capstone project at Nashville
 8. Continuous Integration: Workflow with linting, formatting and unit tests ✅
 9. Continuous Deployment: Deploy project (TBD) ⏳
 10. Custom Diver properties to calculate dive data ✅
-11. Complete functional UI ⏳
-12. Apply styling to UI ⏳
+11. Complete functional UI ✅
+12. Apply styling to UI ✅
 13. Write some tests using mocked data ⏳
 14. Custom ratelimit decorator ⏳
 15. Caching ⏳
@@ -164,3 +164,4 @@ Provide the token in the header as `Authorization: TOKEN "your_token"`
 ```
 python3 manage.py spectacular --file schema.yaml
 ```
+View this spec at /api/docs
