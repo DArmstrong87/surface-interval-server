@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from pytz import timezone as pytz_timezone
+from typing import Optional
 
 from surfaceintervalapi.models import GearItem
 from surfaceintervalapi.serializers.custom_gear_type_serializer import CustomGearTypeSerializer
@@ -27,11 +28,11 @@ class GearItemSerializer(serializers.ModelSerializer):
                 return None
         return None
 
-    def get_days_since_last_service(self, instance):
+    def get_days_since_last_service(self, instance) -> Optional[int]:
         tz = self._get_timezone()
         return instance.get_days_since_last_service(tz=tz)
 
-    def get_due_for_service_days(self, instance):
+    def get_due_for_service_days(self, instance) -> Optional[int]:
         tz = self._get_timezone()
         return instance.get_due_for_service_days(tz=tz)
 

@@ -9,6 +9,7 @@ from .gear_item_service_serializer import GearItemServiceSerializer
 from .gear_item_service_interval_serializer import GearItemServiceIntervalSerializer
 from .gear_set_serializer import GearSetSerializer
 from .gear_type_serializer import GearTypeSerializer
+from .healthcheck_serializer import HealthCheckSerializer
 from .images_serializer import ImageSerializer
 from .login_serializer import LoginSerializer, TokenSerializer
 from .specialty_serializer import SpecialtySerializer

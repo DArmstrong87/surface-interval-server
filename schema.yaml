@@ -781,6 +781,288 @@ paths:
       responses:
         '204':
           description: No response body
+  /gear-item-service-intervals:
+    get:
+      operationId: gear_item_service_intervals_list
+      tags:
+      - gear-item-service-intervals
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GearItemServiceInterval'
+          description: ''
+    post:
+      operationId: gear_item_service_intervals_create
+      tags:
+      - gear-item-service-intervals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearItemServiceInterval'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearItemServiceInterval'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearItemServiceInterval'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItemServiceInterval'
+          description: ''
+  /gear-item-service-intervals/{id}:
+    get:
+      operationId: gear_item_service_intervals_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item service interval.
+        required: true
+      tags:
+      - gear-item-service-intervals
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItemServiceInterval'
+          description: ''
+    put:
+      operationId: gear_item_service_intervals_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item service interval.
+        required: true
+      tags:
+      - gear-item-service-intervals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearItemServiceInterval'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearItemServiceInterval'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearItemServiceInterval'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItemServiceInterval'
+          description: ''
+    patch:
+      operationId: gear_item_service_intervals_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item service interval.
+        required: true
+      tags:
+      - gear-item-service-intervals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItemServiceInterval'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItemServiceInterval'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItemServiceInterval'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItemServiceInterval'
+          description: ''
+    delete:
+      operationId: gear_item_service_intervals_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item service interval.
+        required: true
+      tags:
+      - gear-item-service-intervals
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /gear-item-services:
+    get:
+      operationId: gear_item_services_list
+      tags:
+      - gear-item-services
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GearItemService'
+          description: ''
+    post:
+      operationId: gear_item_services_create
+      tags:
+      - gear-item-services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearItemService'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearItemService'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearItemService'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItemService'
+          description: ''
+  /gear-item-services/{id}:
+    get:
+      operationId: gear_item_services_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item service.
+        required: true
+      tags:
+      - gear-item-services
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItemService'
+          description: ''
+    put:
+      operationId: gear_item_services_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item service.
+        required: true
+      tags:
+      - gear-item-services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GearItemService'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GearItemService'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GearItemService'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItemService'
+          description: ''
+    patch:
+      operationId: gear_item_services_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item service.
+        required: true
+      tags:
+      - gear-item-services
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItemService'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItemService'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGearItemService'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GearItemService'
+          description: ''
+    delete:
+      operationId: gear_item_services_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this gear item service.
+        required: true
+      tags:
+      - gear-item-services
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
   /gear-items:
     get:
       operationId: gear_items_list
@@ -1204,6 +1486,20 @@ paths:
       responses:
         '204':
           description: No response body
+  /healthcheck:
+    get:
+      operationId: healthcheck_retrieve
+      tags:
+      - healthcheck
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+          description: ''
   /images:
     get:
       operationId: images_list
@@ -1727,17 +2023,23 @@ components:
           $ref: '#/components/schemas/CustomGearType'
         name:
           type: string
-          maxLength: 200
-        purchase_date:
+          maxLength: 255
+        service_tracking:
+          type: boolean
+          readOnly: true
+        service_interval:
+          $ref: '#/components/schemas/GearItemServiceInterval'
+        service_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/GearItemService'
+        last_service_date:
           type: string
-          format: date
           nullable: true
-        last_serviced:
-          type: string
-          format: date
-          nullable: true
+          readOnly: true
         dives_since_last_service:
           type: integer
+          nullable: true
           readOnly: true
         days_since_last_service:
           type: integer
@@ -1759,7 +2061,70 @@ components:
       - due_for_service_dives
       - gear_type
       - id
+      - last_service_date
       - name
+      - service_history
+      - service_interval
+      - service_tracking
+    GearItemService:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gear_item:
+          type: integer
+        service_date:
+          type: string
+          format: date
+      required:
+      - gear_item
+      - id
+      - service_date
+    GearItemServiceInterval:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        purchase_date:
+          type: string
+          format: date
+          nullable: true
+        dive_interval:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        day_interval:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+      required:
+      - day_interval
+      - dive_interval
+      - id
+    GearItemSimple:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gear_type:
+          $ref: '#/components/schemas/GearType'
+        custom_gear_type:
+          $ref: '#/components/schemas/CustomGearType'
+        name:
+          type: string
+          maxLength: 255
+        service_tracking:
+          type: boolean
+          readOnly: true
+      required:
+      - custom_gear_type
+      - gear_type
+      - id
+      - name
+      - service_tracking
     GearSet:
       type: object
       properties:
@@ -1769,40 +2134,18 @@ components:
         name:
           type: string
           maxLength: 50
-        bcd:
-          $ref: '#/components/schemas/GearItem'
-        regulator:
-          $ref: '#/components/schemas/GearItem'
-        octopus:
-          $ref: '#/components/schemas/GearItem'
-        mask:
-          $ref: '#/components/schemas/GearItem'
-        fins:
-          $ref: '#/components/schemas/GearItem'
-        boots:
-          $ref: '#/components/schemas/GearItem'
-        computer:
-          $ref: '#/components/schemas/GearItem'
-        exposure_suit:
-          $ref: '#/components/schemas/GearItem'
-        weights:
+        gear_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/GearItemSimple'
+        weight:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-        tank:
-          $ref: '#/components/schemas/GearItem'
       required:
-      - bcd
-      - boots
-      - computer
-      - exposure_suit
-      - fins
+      - gear_items
       - id
-      - mask
-      - octopus
-      - regulator
-      - tank
     GearType:
       type: object
       properties:
@@ -1815,6 +2158,13 @@ components:
       required:
       - id
       - name
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+      - status
     Image:
       type: object
       properties:
@@ -1990,17 +2340,23 @@ components:
           $ref: '#/components/schemas/CustomGearType'
         name:
           type: string
-          maxLength: 200
-        purchase_date:
+          maxLength: 255
+        service_tracking:
+          type: boolean
+          readOnly: true
+        service_interval:
+          $ref: '#/components/schemas/GearItemServiceInterval'
+        service_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/GearItemService'
+        last_service_date:
           type: string
-          format: date
           nullable: true
-        last_serviced:
-          type: string
-          format: date
-          nullable: true
+          readOnly: true
         dives_since_last_service:
           type: integer
+          nullable: true
           readOnly: true
         days_since_last_service:
           type: integer
@@ -2014,6 +2370,35 @@ components:
           type: integer
           nullable: true
           readOnly: true
+    PatchedGearItemService:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        gear_item:
+          type: integer
+        service_date:
+          type: string
+          format: date
+    PatchedGearItemServiceInterval:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        purchase_date:
+          type: string
+          format: date
+          nullable: true
+        dive_interval:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        day_interval:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
     PatchedGearSet:
       type: object
       properties:
@@ -2023,29 +2408,15 @@ components:
         name:
           type: string
           maxLength: 50
-        bcd:
-          $ref: '#/components/schemas/GearItem'
-        regulator:
-          $ref: '#/components/schemas/GearItem'
-        octopus:
-          $ref: '#/components/schemas/GearItem'
-        mask:
-          $ref: '#/components/schemas/GearItem'
-        fins:
-          $ref: '#/components/schemas/GearItem'
-        boots:
-          $ref: '#/components/schemas/GearItem'
-        computer:
-          $ref: '#/components/schemas/GearItem'
-        exposure_suit:
-          $ref: '#/components/schemas/GearItem'
-        weights:
+        gear_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/GearItemSimple'
+        weight:
           type: integer
           maximum: 2147483647
           minimum: -2147483648
           nullable: true
-        tank:
-          $ref: '#/components/schemas/GearItem'
     PatchedGearType:
       type: object
       properties:
