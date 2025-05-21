@@ -31,8 +31,8 @@ DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = [
     ".run.app",
-    "surface-interval-ui-931350853391.us-central1.run.app," # CloudRun UI url
-    "surface-interval-server-931350853391.us-central1.run.app ", # CloudRun Server url
+    "surface-interval-ui-931350853391.us-central1.run.app", # CloudRun UI url
+    "surface-interval-server-931350853391.us-central1.run.app", # CloudRun Server url
     "surfaceinterval.app",
     "api.surfaceinterval.app",
     "localhost",
