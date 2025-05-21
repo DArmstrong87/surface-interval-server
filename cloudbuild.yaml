@@ -1,0 +1,26 @@
+steps:
+  # Step 1: Fetch secrets from Secret Manager
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Fetch DJANGO_SECRET_KEY'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        export DJANGO_SECRET_KEY=$(gcloud secrets versions access latest --secret=DJANGO_SECRET_KEY)
+        echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY"
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'Fetch DATABASE_URL'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        export DATABASE_URL=$(gcloud secrets versions access latest --secret=DATABASE_URL)
+        echo "DATABASE_URL=$DATABASE_URL"
+
+  # Step 2: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$surface-interval/surface-interval-repo/surface-interval-server:$COMMIT_SHA', '.']
+    env:
+      - 'DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY'
+      - 'DATABASE_URL=$DATABASE_URL'

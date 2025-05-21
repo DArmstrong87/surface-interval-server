@@ -1,0 +1,14 @@
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
+
+
+echo "${green}Building...${reset}"
+docker build -t us-central1-docker.pkg.dev/surface-interval/surface-interval-repo/surface-interval-server .
+
+echo "${green}Pushing to Artifact Registry...${reset}"
+docker push us-central1-docker.pkg.dev/surface-interval/surface-interval-repo/surface-interval-server      
+
+echo "${green}Deploying to Cloud Run...${reset}"
+gcloud run deploy surface-interval-server --image=us-central1-docker.pkg.dev/surface-interval/surface-interval-repo/surface-interval-server --platform=managed --region=us-central1 --allow-unauthenticated

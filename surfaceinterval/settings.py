@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from decouple import config
 from pathlib import Path
 import sys
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,11 +30,13 @@ SECRET_KEY = config("SECRET_KEY", default="django-insecure-set-now")
 DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = [
-    "0.0.0.0",
+    ".run.app",
+    "surface-interval-ui-931350853391.us-central1.run.app,"
+    "surface-interval-server-931350853391.us-central1.run.app ",
+    "surfaceinterval.app",
     "localhost",
     "127.0.0.1",
 ]
-
 
 # Application definition
 
@@ -52,9 +55,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -70,7 +73,18 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-CORS_ORIGIN_WHITELIST = ("http://localhost:3000", "http://127.0.0.1:3000")
+ORIGIN_WHITELIST = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://surface-interval-ui-931350853391.us-central1.run.app",
+    "https://surface-interval-server-931350853391.us-central1.run.app",
+    "https://surfaceinterval.app",
+]
+
+CORS_ORIGIN_WHITELIST = ORIGIN_WHITELIST
+CORS_ALLOWED_ORIGINS = ORIGIN_WHITELIST
 
 ROOT_URLCONF = "surfaceinterval.urls"
 
@@ -101,18 +115,22 @@ POSTGRES_USER = config("POSTGRES_USER", default="surfaceinterval")
 POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default="")
 DB_HOST = config("DB_HOST", default="127.0.0.1")
 DB_PORT = config("DB_PORT", default="5432")
+DATABASE_URL = config("DATABASE_URL", default="")
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": POSTGRES_DB,
-        "USER": POSTGRES_USER,
-        "PASSWORD": POSTGRES_PASSWORD,
-        "HOST": DB_HOST,
-        "PORT": DB_PORT,  # Default PostgreSQL port is 5432
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": POSTGRES_DB,
+            "USER": POSTGRES_USER,
+            "PASSWORD": POSTGRES_PASSWORD,
+            "HOST": DB_HOST,
+            "PORT": DB_PORT,  # Default PostgreSQL port is 5432
+        }
     }
-}
+else:
+    DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
 
 TEST = "test" in sys.argv
 # Use a simple sqlite3 database for running tests

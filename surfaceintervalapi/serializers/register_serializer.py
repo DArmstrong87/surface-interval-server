@@ -6,8 +6,8 @@ class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField()
     email = serializers.EmailField()
     password = serializers.CharField()
-    first_name = (serializers.CharField(),)
-    last_name = (serializers.CharField(),)
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
     units = serializers.CharField()
 
 
