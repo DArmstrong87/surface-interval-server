@@ -31,9 +31,10 @@ DEBUG = config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = [
     ".run.app",
-    "surface-interval-ui-931350853391.us-central1.run.app,"
-    "surface-interval-server-931350853391.us-central1.run.app ",
+    "surface-interval-ui-931350853391.us-central1.run.app," # CloudRun UI url
+    "surface-interval-server-931350853391.us-central1.run.app ", # CloudRun Server url
     "surfaceinterval.app",
+    "api.surfaceinterval.app",
     "localhost",
     "127.0.0.1",
 ]
@@ -81,6 +82,7 @@ ORIGIN_WHITELIST = [
     "https://surface-interval-ui-931350853391.us-central1.run.app",
     "https://surface-interval-server-931350853391.us-central1.run.app",
     "https://surfaceinterval.app",
+    "https://api.surfaceinterval.app",
 ]
 
 CORS_ORIGIN_WHITELIST = ORIGIN_WHITELIST
