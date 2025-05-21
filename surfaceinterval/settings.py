@@ -117,7 +117,7 @@ DB_HOST = config("DB_HOST", default="127.0.0.1")
 DB_PORT = config("DB_PORT", default="5432")
 DATABASE_URL = config("DATABASE_URL", default="")
 
-
+TEST = "test" in sys.argv
 if DEBUG:
     DATABASES = {
         "default": {
@@ -129,12 +129,8 @@ if DEBUG:
             "PORT": DB_PORT,  # Default PostgreSQL port is 5432
         }
     }
-else:
-    DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
-
-TEST = "test" in sys.argv
-# Use a simple sqlite3 database for running tests
-if TEST:
+elif TEST:
+    # Use a simple sqlite3 database for running tests
     DB_HOST = "127.0.0.1"
     DATABASES = {
         "default": {
@@ -142,6 +138,8 @@ if TEST:
             "NAME": "test_db.sqlite3",
         }
     }
+else:
+    DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
 
 FIXTURES_DIR = "surfaceintervalapi/fixtures/"
 
