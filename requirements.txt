@@ -1,8 +1,10 @@
 asgiref==3.7.2
 black==23.10.0
 click==8.1.7
+dj-database-url==2.3.0
 django-cors-headers==4.3.0
 Django==4.2.6
+django-cors-headers==4.3.0
 djangorestframework==3.14.0
 drf-spectacular==0.28.0
 gunicorn==23.0.0

@@ -5,8 +5,8 @@
         "fields": {
             "gear_item": 1,
             "purchase_date": "2019-08-01",
-            "dives": 50,
-            "days": 365
+            "dive_interval": 50,
+            "day_interval": 365
         }
     },
     {
@@ -15,8 +15,8 @@
         "fields": {
             "gear_item": 2,
             "purchase_date": "2019-08-01",
-            "dives": 50,
-            "days": 365
+            "dive_interval": 50,
+            "day_interval": 365
         }
     },
     {
@@ -25,8 +25,8 @@
         "fields": {
             "gear_item": 3,
             "purchase_date": "2019-08-01",
-            "dives": 50,
-            "days": 365
+            "dive_interval": 50,
+            "day_interval": 365
         }
     }
 ]

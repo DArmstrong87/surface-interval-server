@@ -2,8 +2,8 @@
 FROM python:3.11-slim
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set work directory
 WORKDIR /code
@@ -15,5 +15,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy project files
 COPY . .
 
+# Expose port for CloudRun
+EXPOSE 8080
+
 # Run migrations and server in entrypoint (can be overridden)
-CMD ["gunicorn", "surfaceinterval.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "surfaceinterval.wsgi:application", "--bind", "0.0.0.0:8080"]
