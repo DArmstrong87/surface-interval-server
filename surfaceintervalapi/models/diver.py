@@ -1,7 +1,9 @@
 from django.db import models
 from django.db.models import F, Case, When, Q, CharField, Count
 from django.contrib.auth.models import User
-from surfaceintervalapi.utils import get_air_consumption_cu_ft_min, get_air_consumption_ltrs_min
+from surfaceintervalapi.utils import get_air_consumption_cu_ft_min, get_average_air_consumption
+from django.forms.models import model_to_dict
+from surfaceintervalapi.utils import get_dive_air_consumption
 
 from surfaceintervalapi.models.dive import Dive, DiveSpecialty
 
@@ -21,7 +23,7 @@ class Diver(models.Model):
         return Dive.objects.filter(diver=self).count()
 
     @property
-    def most_recent_dive(self) -> str:
+    def most_recent_dive(self) -> str | None:
         dive = Dive.objects.filter(diver=self).latest("date")
         return dive.date
 
@@ -72,29 +74,46 @@ class Diver(models.Model):
         return most_logged_specialty
 
     @property
-    def avg_air_consumption(self) -> float | None:
+    def air_consumption(self) -> dict | None:
         dives = Dive.objects.filter(
             diver=self, start_pressure__isnull=False, end_pressure__isnull=False
-        ).values()
+        )
 
-        avg_air_consumption_ltrs_min = None
-        avg_air_consumption_cu_ft_min = None
+        if dives.count() == 0:
+            return None
+
+        dives_with_pressure_logged = [dive for dive in dives if dive.air_consumption is not None]
+        least_efficient_dive = max(dives_with_pressure_logged, key=lambda x: x.air_consumption)
+        most_efficient_dive = min(dives_with_pressure_logged, key=lambda x: x.air_consumption)
+        print("min_dive", least_efficient_dive.air_consumption, most_efficient_dive.air_consumption)
+
+        dives = dives.values()
+
         for dive in dives:
             air_consumption = get_air_consumption_cu_ft_min(dive, self.units)
             dive["air_consumption"] = air_consumption
 
-        if dives:
-            avg_air_consumption_cu_ft_min = sum([d["air_consumption"] for d in dives]) / len(dives)
-            avg_air_consumption_ltrs_min = get_air_consumption_ltrs_min(
-                avg_air_consumption_cu_ft_min
-            )
+        most_efficient_dive = model_to_dict(most_efficient_dive)
+        most_efficient_dive_air_consumption = get_dive_air_consumption(
+            most_efficient_dive, self.units
+        )
 
-        avg_air_consumption = {
-            "cu_ft_min": avg_air_consumption_cu_ft_min,
-            "ltrs_min": avg_air_consumption_ltrs_min,
+        least_efficient_dive = model_to_dict(least_efficient_dive)
+        least_efficient_dive_air_consumption = get_dive_air_consumption(
+            least_efficient_dive, self.units
+        )
+
+        avg_air_consumption = get_average_air_consumption(dives)
+
+        air_consumption = {
+            "most_efficient": most_efficient_dive_air_consumption,
+            "least_efficient": least_efficient_dive_air_consumption,
+            "average": avg_air_consumption,
         }
 
-        return avg_air_consumption
+        print("AIR", air_consumption)
+
+        return air_consumption
 
     def __str__(self):
         return f"{self.pk} | {self.user.first_name} {self.user.last_name}"
