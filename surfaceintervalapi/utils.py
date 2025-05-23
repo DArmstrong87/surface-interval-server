@@ -1,10 +1,18 @@
+from decimal import Decimal, ROUND_HALF_UP
+
 CU_FT_TO_LITERS_FACTOR = 28.3168
 IMPERIAL_ATM_FACTOR = 33
 METRIC_ATM_FACTOR = 10
 DEFAULT_TANK_VOLUME = 80
 
 
-def get_air_consumption_cu_ft_min(dive, units):
+def get_rounded_value(value: float, precision: str) -> float:
+    decimal_value = Decimal(value)
+    rounded_value = decimal_value.quantize(Decimal(precision), rounding=ROUND_HALF_UP)
+    return float(rounded_value)
+
+
+def get_air_consumption_cu_ft_min(dive: dict, units: str):
     """
     Calculates surface air consumption rate
     0.315 cubic feet per minute
@@ -37,8 +45,29 @@ def get_air_consumption_cu_ft_min(dive, units):
 
     # liters_per_minute = round(surface_air_consumption_rate * 28.3168, 3)
     # print(f"Consumption rate is {liters_per_minute} liters per minute")
-    return round(surface_air_consumption_rate, 3)
+    rounded_value = get_rounded_value(surface_air_consumption_rate, "0.01")
+    return float(rounded_value)
 
 
 def get_air_consumption_ltrs_min(avg_air_consumption_cu_ft_min):
-    return round(avg_air_consumption_cu_ft_min * CU_FT_TO_LITERS_FACTOR, 3)
+    ltrs_min = avg_air_consumption_cu_ft_min * CU_FT_TO_LITERS_FACTOR
+    rounded_value = get_rounded_value(ltrs_min, "0.01")
+    return rounded_value
+
+
+def get_dive_air_consumption(dive: dict, units: str) -> dict:
+    dive_cu_ft_min = get_air_consumption_cu_ft_min(dive, units)
+    dive_ltrs_min = get_air_consumption_ltrs_min(dive_cu_ft_min)
+    return {"cu_ft_min": dive_cu_ft_min, "ltrs_min": dive_ltrs_min}
+
+
+def get_average_air_consumption(dives: list) -> dict:
+    avg_air_consumption_cu_ft_min = sum([d["air_consumption"] for d in dives]) / len(dives)
+    rounded_avg_air_consumption_cu_ft_min = get_rounded_value(avg_air_consumption_cu_ft_min, "0.01")
+    rounded_avg_air_consumption_ltrs_min = get_air_consumption_ltrs_min(
+        avg_air_consumption_cu_ft_min
+    )
+    return {
+        "cu_ft_min": rounded_avg_air_consumption_cu_ft_min,
+        "ltrs_min": rounded_avg_air_consumption_ltrs_min,
+    }

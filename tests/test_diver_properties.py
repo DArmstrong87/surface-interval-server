@@ -42,8 +42,12 @@ class DiverPropertiesTestCase(TestCase):
         self.assertEqual(diver.most_logged_specialty.get("specialty_name"), "Boat")
         self.assertEqual(diver.most_logged_specialty.get("count"), 3)
 
-        self.assertEqual(diver.avg_air_consumption.get("cu_ft_min"), 0.851)
-        self.assertEqual(diver.avg_air_consumption.get("ltrs_min"), 24.098)
+        self.assertEqual(diver.air_consumption["most_efficient"]["cu_ft_min"], 0.79)
+        self.assertEqual(diver.air_consumption["most_efficient"]["ltrs_min"], 22.37)
+        self.assertEqual(diver.air_consumption["least_efficient"]["cu_ft_min"], 0.79)
+        self.assertEqual(diver.air_consumption["least_efficient"]["ltrs_min"], 22.37)
+        self.assertEqual(diver.air_consumption["average"]["cu_ft_min"], 0.85)
+        self.assertEqual(diver.air_consumption["average"]["ltrs_min"], 24.07)
 
     def test_null_values_in_dynamic_properties(self):
         print_test_info("Testing Diver dynamic properties with null values")
@@ -58,5 +62,5 @@ class DiverPropertiesTestCase(TestCase):
         self.assertIsNone(diver.longest_dive)
         self.assertIsNone(diver.shortest_dive)
         self.assertIsNone(diver.most_logged_specialty)
-        self.assertIsNone(diver.avg_air_consumption.get("cu_ft_min"))
-        self.assertIsNone(diver.avg_air_consumption.get("ltrs_min"))
+        self.assertIsNone(diver.air_consumption)
+        self.assertIsNone(diver.air_consumption)
