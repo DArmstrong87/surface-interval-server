@@ -1976,6 +1976,7 @@ components:
           readOnly: true
         most_recent_dive:
           type: string
+          nullable: true
           readOnly: true
         deepest_dive:
           type: integer
@@ -1995,13 +1996,13 @@ components:
             type: integer
             nullable: true
           readOnly: true
-        avg_air_consumption:
-          type: number
-          format: double
+        air_consumption:
+          type: object
+          additionalProperties: {}
           nullable: true
           readOnly: true
       required:
-      - avg_air_consumption
+      - air_consumption
       - deepest_dive
       - id
       - longest_dive
@@ -2184,13 +2185,13 @@ components:
     Login:
       type: object
       properties:
-        username:
+        email:
           type: string
         password:
           type: string
       required:
+      - email
       - password
-      - username
     PatchedCertCard:
       type: object
       properties:
@@ -2304,6 +2305,7 @@ components:
           readOnly: true
         most_recent_dive:
           type: string
+          nullable: true
           readOnly: true
         deepest_dive:
           type: integer
@@ -2323,9 +2325,9 @@ components:
             type: integer
             nullable: true
           readOnly: true
-        avg_air_consumption:
-          type: number
-          format: double
+        air_consumption:
+          type: object
+          additionalProperties: {}
           nullable: true
           readOnly: true
     PatchedGearItem:
@@ -2457,10 +2459,16 @@ components:
           format: email
         password:
           type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
         units:
           type: string
       required:
       - email
+      - first_name
+      - last_name
       - password
       - units
       - username
