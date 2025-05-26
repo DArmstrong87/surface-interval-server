@@ -14,7 +14,7 @@ jobs:
 
     env:
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-      SECRET_KEY: test-key-not-used-in-production
+      SECRET_KEY: github-actions-secret-key
       DEBUG: "False"
       ALLOWED_HOSTS: localhost,127.0.0.1
 
