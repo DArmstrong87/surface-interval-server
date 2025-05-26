@@ -39,9 +39,9 @@ I originally built Surface Interval as my frontend capstone project at Nashville
 15. Caching ⏳
 
 # Entity Relationship Diagram
-https://dbdiagram.io/d/Surface-Interval-6121e4556dc2bb6073b57eeb
+Generated using django-extensions' `graph_models` command. A custom command `bin/erd` modifies the `erd.dot` file to customize the png output.
 
-![Surface Interval ERD](images/surface_interval_erd.png)
+![Surface Interval ERD](images/erd.png)
 
 
 # LOCAL DEVELOPMENT
