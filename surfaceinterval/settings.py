@@ -21,6 +21,9 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Check if we're running tests
+TEST = "test" in sys.argv
+
 # Initialize environ with default values and type casting
 env = environ.Env(
     # Security
@@ -73,8 +76,11 @@ ORIGIN_WHITELIST = [
 CORS_ORIGIN_WHITELIST = ORIGIN_WHITELIST
 CORS_ALLOWED_ORIGINS = ORIGIN_WHITELIST
 
-if not DEBUG:
+# Only enable SSL redirect in production and not during tests
+if not DEBUG and not TEST:
     SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_SECONDS = 31536000
 
 
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/
@@ -160,7 +166,7 @@ DB_HOST = env("DB_HOST")
 DB_PORT = env("DB_PORT")
 DATABASE_URL = env("DATABASE_URL")
 
-TEST = "test" in sys.argv
+
 if DEBUG:
     DATABASES = {
         "default": {
