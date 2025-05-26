@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from surfaceintervalapi.models import Diver, GearItem, GearSet, GearType
 from surfaceintervalapi.types import IMPERIAL_UNIT
 from tests.utils import print_test_info, print_assert_that, print_test_action, print_test_setup
@@ -41,8 +40,7 @@ class GearSetViewTestCase(TestCase):
         self.gear_set.gear_items.set([self.gear_item1, self.gear_item2])
 
         # Create and set authentication token
-        self.token = Token.objects.create(user=self.user)
-        self.client.force_authenticate(user=self.user, token=self.token)
+        self.client.force_authenticate(user=self.user)
 
         return super().setUp()
 
@@ -165,7 +163,7 @@ class GearSetViewTestCase(TestCase):
         _ = Diver.objects.create(user=new_user, default_gear_set=None, units=IMPERIAL_UNIT)
 
         print_test_action("Authenticating as new user")
-        self.client.force_authenticate(user=new_user, token=Token.objects.create(user=new_user))
+        self.client.force_authenticate(user=new_user)
 
         print_test_action(f"Making GET request to /gear-sets/{self.gear_set.id}")
         response = self.client.get(f"/gear-sets/{self.gear_set.id}")
