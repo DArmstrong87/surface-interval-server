@@ -17,7 +17,7 @@ class SpecialtyView(ModelViewSet):
 
     def create(self, request):
         try:
-            Diver.objects.get(user=request.auth.user, user__is_superuser=True)
+            Diver.objects.get(user=request.user, user__is_superuser=True)
         except Diver.DoesNotExist:
             return Response({"error": "You are not authorized."}, status=status.HTTP_403_FORBIDDEN)
 
@@ -34,7 +34,7 @@ class SpecialtyView(ModelViewSet):
 
     def destroy(self, request, pk=None):
         try:
-            Diver.objects.get(user=request.auth.user, user__is_superuser=True)
+            Diver.objects.get(user=request.user, user__is_superuser=True)
         except Diver.DoesNotExist:
             return Response({"error": "You are not authorized."}, status=status.HTTP_403_FORBIDDEN)
 

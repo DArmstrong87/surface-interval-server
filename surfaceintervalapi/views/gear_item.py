@@ -11,7 +11,7 @@ class GearItemView(ModelViewSet):
     serializer_class = GearItemSerializer
 
     def retrieve(self, request, pk):
-        gear_item = GearItem.objects.get(pk=pk, diver__user=request.auth.user)
+        gear_item = GearItem.objects.get(pk=pk, diver__user=request.user)
         tz = request.query_params.get("timezone")
         serializer = GearItemSerializer(
             gear_item, many=False, context={"request": request, "timezone": tz}
@@ -19,20 +19,20 @@ class GearItemView(ModelViewSet):
         return Response(serializer.data)
 
     def list(self, request):
-        gear_items = GearItem.objects.filter(diver__user=request.auth.user)
+        gear_items = GearItem.objects.filter(diver__user=request.user)
         serializer = GearItemSerializer(gear_items, many=True, context={"request": request})
         return Response(serializer.data)
 
     def create(self, request):
         try:
-            diver = Diver.objects.get(user=request.auth.user)
+            diver = Diver.objects.get(user=request.user)
             gear_type_id = request.data["gearTypeId"]
             custom_gear_type_id = request.data["customGearTypeId"]
             new_custom_gear_type = request.data["newCustomGearType"]
             item_name = request.data["name"]
         except Diver.DoesNotExist:
             return Response(
-                {"error": f"Diver of ID {request.auth.user.id} not found."},
+                {"error": f"Diver of ID {request.user.id} not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
         except KeyError:
@@ -123,7 +123,7 @@ class GearItemView(ModelViewSet):
 
             if custom_gear_type_id is not None:
                 custom_gear_type = CustomGearType.objects.get(
-                    pk=custom_gear_type_id, diver__user=request.auth.user
+                    pk=custom_gear_type_id, diver__user=request.user
                 )
             else:
                 custom_gear_type = None
@@ -139,7 +139,7 @@ class GearItemView(ModelViewSet):
             )
 
         try:
-            diver = Diver.objects.get(user=request.auth.user)
+            diver = Diver.objects.get(user=request.user)
             gear_item = GearItem.objects.get(pk=pk, diver=diver)
 
             gear_item.name = name
@@ -155,7 +155,7 @@ class GearItemView(ModelViewSet):
 
     def destroy(self, request, pk=None):
         try:
-            gear_item = GearItem.objects.get(pk=pk, diver__user=request.auth.user)
+            gear_item = GearItem.objects.get(pk=pk, diver__user=request.user)
             gear_item.delete()
 
             return Response({"GearItem deleted"}, status=status.HTTP_204_NO_CONTENT)

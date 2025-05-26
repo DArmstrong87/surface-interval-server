@@ -14,7 +14,7 @@ class DiverView(ModelViewSet):
 
     def list(self, request):
         try:
-            diver = Diver.objects.get(user=request.auth.user)
+            diver = Diver.objects.get(user=request.user)
             serializer = DiverSerializer(diver, context={"request": request})
             return Response(serializer.data)
         except Exception as ex:
@@ -22,7 +22,7 @@ class DiverView(ModelViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            diver = Diver.objects.get(pk=pk, user=request.auth.user)
+            diver = Diver.objects.get(pk=pk, user=request.user)
             serializer = DiverSerializer(diver, context={"request": request})
             return Response(serializer.data)
         except Exception as ex:
@@ -30,8 +30,8 @@ class DiverView(ModelViewSet):
 
     def partial_update(self, request, pk):
         try:
-            diver = Diver.objects.get(user=request.auth.user)
-            user = request.auth.user
+            diver = Diver.objects.get(user=request.user)
+            user = request.user
 
             diver.units = request.data["units"]
             user.first_name = request.data["first_name"]

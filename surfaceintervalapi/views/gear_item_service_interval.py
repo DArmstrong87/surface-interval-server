@@ -38,7 +38,7 @@ class GearItemServiceIntervalView(ModelViewSet):
     def destroy(self, request, pk=None):
         try:
             gear_item = GearItemServiceInterval.objects.get(
-                pk=pk, gear_item__diver__user=request.auth.user
+                pk=pk, gear_item__diver__user=request.user
             )
             gear_item.delete()
 
@@ -50,7 +50,7 @@ class GearItemServiceIntervalView(ModelViewSet):
     def retrieve(self, request, pk=None):
         try:
             gear_item_service_interval = GearItemServiceInterval.objects.get(
-                pk=pk, gear_item__diver__user=request.auth.user
+                pk=pk, gear_item__diver__user=request.user
             )
             serializer = self.serializer_class(
                 gear_item_service_interval, many=False, context={"request": request}

@@ -16,20 +16,20 @@ class DiveView(ModelViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            dive = Dive.objects.get(pk=pk, diver__user=request.auth.user)
+            dive = Dive.objects.get(pk=pk, diver__user=request.user)
             serializer = DiveSerializer(dive, context={"request": request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
     def list(self, request):
-        dives = Dive.objects.filter(diver__user=request.auth.user).order_by("date", "id")
+        dives = Dive.objects.filter(diver__user=request.user).order_by("date", "id")
         serializer = DiveSerializer(dives, many=True, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
         try:
-            diver = Diver.objects.get(user=request.auth.user)
+            diver = Diver.objects.get(user=request.user)
         except Diver.DoesNotExist as ex:
             return Response({"error": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
@@ -61,10 +61,10 @@ class DiveView(ModelViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
         if diver is None:
             return Response(
-                {"error": f"Diver of id {request.auth.user_id} does not exist."},
+                {"error": f"Diver of id {request.user.id} does not exist."},
                 status=status.HTTP_404_NOT_FOUND,
             )
 
@@ -84,7 +84,7 @@ class DiveView(ModelViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             dive = Dive.objects.get(pk=pk, diver=diver)
@@ -97,7 +97,7 @@ class DiveView(ModelViewSet):
 
     @action(methods=["post", "delete"], detail=True, url_path="star")
     def star(self, request, pk):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
         dive = Dive.objects.get(pk=pk, diver=diver)
 
         if request.method == "POST":
@@ -128,6 +128,6 @@ class DiveView(ModelViewSet):
 
     @action(methods=["get"], detail=True, url_path="images")
     def get_dive_images(self, request, pk):
-        images = Image.objects.filter(diver__user=request.auth.user, dive=pk)
+        images = Image.objects.filter(diver__user=request.user, dive=pk)
         serializer = ImageSerializer(images, many=True, context={"request": request})
         return Response(serializer.data)

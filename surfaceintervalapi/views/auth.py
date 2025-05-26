@@ -1,8 +1,11 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.utils import timezone
+from rest_framework import status
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from drf_spectacular.utils import extend_schema
-from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -27,29 +30,60 @@ def login_user(request):
     Method arguments:
     request -- The full HTTP request object
     """
-    email = request.data["email"]
-    password = request.data["password"]
-    # Use the built-in authenticate method to verify
-    # authenticate returns the user object or None if no user is found
-    username = None
     try:
-        user = User.objects.get(email=email)
-        username = user.username
-    except User.DoesNotExist:
-        return Response({"valid": False})
+        email = request.data.get("email", "").lower()
+        password = request.data.get("password", "")
 
-    authenticated_user = authenticate(username=username, password=password)
-    # If authentication was successful, respond with their token
-    if authenticated_user is not None:
-        token, created = Token.objects.get_or_create(user=authenticated_user)
-        if created:
-            print(f"Token created for user {authenticated_user.username}")
-        data = {"valid": True, "token": token.key}
-        return Response(data)
-    else:
-        # Bad login details were provided. So we can't log the user in.
-        data = {"valid": False}
-    return Response(data)
+        if not email or not password:
+            return Response(
+                {"error": "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Get user by email
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Check if user is active
+        if not user.is_active:
+            return Response(
+                {"error": "User account is disabled"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Authenticate user
+        authenticated_user = authenticate(username=user.username, password=password)
+        if authenticated_user is None:
+            return Response(
+                {"error": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Update last login
+        user.last_login = timezone.now()
+        user.save()
+
+        # Generate tokens
+        try:
+            refresh = RefreshToken.for_user(authenticated_user)
+            data = {
+                "valid": True,
+                "token": str(refresh.access_token),
+                "refresh": str(refresh),
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        except TokenError as e:
+            return Response(
+                {"error": f"Error generating token: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    except Exception as e:
+        return Response(
+            {"error": f"An unexpected error occurred: {e}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
 
 @extend_schema(
@@ -71,7 +105,9 @@ def register_user(request):
         user=new_user,
         units=request.data["units"],
     )
+    diver.user.last_login = timezone.now()
+    diver.user.save()
 
-    token = Token.objects.create(user=diver.user)
-    data = {"token": token.key}
+    refresh = RefreshToken.for_user(diver.user)
+    data = {"token": str(refresh.access_token), "refresh": str(refresh)}
     return Response(data)

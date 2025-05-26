@@ -12,7 +12,7 @@ class GearSetView(ModelViewSet):
 
     def retrieve(self, request, pk):
         try:
-            gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
+            gear_set = GearSet.objects.get(pk=pk, diver__user=request.user)
             serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
             return Response(serializer.data)
         except GearSet.DoesNotExist:
@@ -23,7 +23,7 @@ class GearSetView(ModelViewSet):
 
     def list(self, request):
         try:
-            gear_sets = GearSet.objects.filter(diver__user=request.auth.user)
+            gear_sets = GearSet.objects.filter(diver__user=request.user)
             serializer = GearSetSerializer(gear_sets, many=True, context={"request": request})
             return Response(serializer.data)
         except Exception as ex:
@@ -43,11 +43,11 @@ class GearSetView(ModelViewSet):
             )
 
         try:
-            diver = Diver.objects.get(user=request.auth.user)
+            diver = Diver.objects.get(user=request.user)
 
             # Verify all gear items exist and belong to the user
             gear_items_queryset = GearItem.objects.filter(
-                id__in=gear_items, diver__user=request.auth.user
+                id__in=gear_items, diver__user=request.user
             )
             if len(gear_items_queryset) != len(gear_items):
                 return Response(
@@ -76,9 +76,7 @@ class GearSetView(ModelViewSet):
             )
 
         # Verify all gear items exist and belong to the user
-        gear_items_queryset = GearItem.objects.filter(
-            id__in=gear_items, diver__user=request.auth.user
-        )
+        gear_items_queryset = GearItem.objects.filter(id__in=gear_items, diver__user=request.user)
         if len(gear_items_queryset) != len(gear_items):
             return Response(
                 {"error": "One or more gear items not found"},
@@ -86,7 +84,7 @@ class GearSetView(ModelViewSet):
             )
 
         try:
-            gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
+            gear_set = GearSet.objects.get(pk=pk, diver__user=request.user)
             gear_set.name = name
             gear_set.weight = weight
             gear_set.gear_items.set(gear_items_queryset)
@@ -99,7 +97,7 @@ class GearSetView(ModelViewSet):
 
     def destroy(self, request, pk=None):
         try:
-            gear_set = GearSet.objects.get(pk=pk, diver__user=request.auth.user)
+            gear_set = GearSet.objects.get(pk=pk, diver__user=request.user)
             gear_set.delete()
 
             return Response({"GearSet deleted"}, status=status.HTTP_204_NO_CONTENT)

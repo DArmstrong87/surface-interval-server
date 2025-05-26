@@ -13,3 +13,4 @@ class RegisterSerializer(serializers.Serializer):
 
 class RegisterTokenSerializer(serializers.Serializer):
     token = serializers.CharField()
+    refresh = serializers.CharField()

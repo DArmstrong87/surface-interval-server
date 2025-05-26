@@ -125,7 +125,7 @@ paths:
       tags:
       - api
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -147,13 +147,94 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /api/token/:
+    post:
+      operationId: api_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/token/verify/:
+    post:
+      operationId: api_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
   /cert-cards:
     get:
       operationId: cert_cards_list
       tags:
       - cert-cards
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -180,7 +261,7 @@ paths:
               $ref: '#/components/schemas/CertCard'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -201,7 +282,7 @@ paths:
       tags:
       - cert-cards
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -233,7 +314,7 @@ paths:
               $ref: '#/components/schemas/CertCard'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -264,7 +345,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedCertCard'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -284,7 +365,7 @@ paths:
       tags:
       - cert-cards
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -294,7 +375,7 @@ paths:
       tags:
       - custom-gear-types
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -321,7 +402,7 @@ paths:
               $ref: '#/components/schemas/CustomGearType'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -342,7 +423,7 @@ paths:
       tags:
       - custom-gear-types
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -374,7 +455,7 @@ paths:
               $ref: '#/components/schemas/CustomGearType'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -405,7 +486,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedCustomGearType'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -425,7 +506,7 @@ paths:
       tags:
       - custom-gear-types
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -435,7 +516,7 @@ paths:
       tags:
       - divers
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -462,7 +543,7 @@ paths:
               $ref: '#/components/schemas/Diver'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -483,7 +564,7 @@ paths:
       tags:
       - divers
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -515,7 +596,7 @@ paths:
               $ref: '#/components/schemas/Diver'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -546,7 +627,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedDiver'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -566,7 +647,7 @@ paths:
       tags:
       - divers
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -576,7 +657,7 @@ paths:
       tags:
       - dives
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -603,7 +684,7 @@ paths:
               $ref: '#/components/schemas/Dive'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -624,7 +705,7 @@ paths:
       tags:
       - dives
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -656,7 +737,7 @@ paths:
               $ref: '#/components/schemas/Dive'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -687,7 +768,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedDive'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -707,7 +788,7 @@ paths:
       tags:
       - dives
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -724,7 +805,7 @@ paths:
       tags:
       - dives
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -757,7 +838,7 @@ paths:
               $ref: '#/components/schemas/Dive'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -777,7 +858,7 @@ paths:
       tags:
       - dives
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -787,7 +868,7 @@ paths:
       tags:
       - gear-item-service-intervals
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -814,7 +895,7 @@ paths:
               $ref: '#/components/schemas/GearItemServiceInterval'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -835,7 +916,7 @@ paths:
       tags:
       - gear-item-service-intervals
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -867,7 +948,7 @@ paths:
               $ref: '#/components/schemas/GearItemServiceInterval'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -898,7 +979,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedGearItemServiceInterval'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -918,7 +999,7 @@ paths:
       tags:
       - gear-item-service-intervals
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -928,7 +1009,7 @@ paths:
       tags:
       - gear-item-services
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -955,7 +1036,7 @@ paths:
               $ref: '#/components/schemas/GearItemService'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -976,7 +1057,7 @@ paths:
       tags:
       - gear-item-services
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1008,7 +1089,7 @@ paths:
               $ref: '#/components/schemas/GearItemService'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1039,7 +1120,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedGearItemService'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1059,7 +1140,7 @@ paths:
       tags:
       - gear-item-services
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -1069,7 +1150,7 @@ paths:
       tags:
       - gear-items
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1096,7 +1177,7 @@ paths:
               $ref: '#/components/schemas/GearItem'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -1117,7 +1198,7 @@ paths:
       tags:
       - gear-items
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1149,7 +1230,7 @@ paths:
               $ref: '#/components/schemas/GearItem'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1180,7 +1261,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedGearItem'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1200,7 +1281,7 @@ paths:
       tags:
       - gear-items
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -1210,7 +1291,7 @@ paths:
       tags:
       - gear-sets
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1237,7 +1318,7 @@ paths:
               $ref: '#/components/schemas/GearSet'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -1258,7 +1339,7 @@ paths:
       tags:
       - gear-sets
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1290,7 +1371,7 @@ paths:
               $ref: '#/components/schemas/GearSet'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1321,7 +1402,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedGearSet'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1341,7 +1422,7 @@ paths:
       tags:
       - gear-sets
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -1351,7 +1432,7 @@ paths:
       tags:
       - gear-types
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1378,7 +1459,7 @@ paths:
               $ref: '#/components/schemas/GearType'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -1399,7 +1480,7 @@ paths:
       tags:
       - gear-types
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1431,7 +1512,7 @@ paths:
               $ref: '#/components/schemas/GearType'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1462,7 +1543,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedGearType'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1482,7 +1563,7 @@ paths:
       tags:
       - gear-types
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -1492,7 +1573,7 @@ paths:
       tags:
       - healthcheck
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1506,7 +1587,7 @@ paths:
       tags:
       - images
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1533,7 +1614,7 @@ paths:
               $ref: '#/components/schemas/Image'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -1554,7 +1635,7 @@ paths:
       tags:
       - images
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1586,7 +1667,7 @@ paths:
               $ref: '#/components/schemas/Image'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1617,7 +1698,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedImage'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1637,7 +1718,7 @@ paths:
       tags:
       - images
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -1663,7 +1744,7 @@ paths:
               $ref: '#/components/schemas/Login'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -1690,7 +1771,7 @@ paths:
               $ref: '#/components/schemas/Register'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       - {}
       responses:
         '200':
@@ -1705,7 +1786,7 @@ paths:
       tags:
       - specialties
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1732,7 +1813,7 @@ paths:
               $ref: '#/components/schemas/Specialty'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -1753,7 +1834,7 @@ paths:
       tags:
       - specialties
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1785,7 +1866,7 @@ paths:
               $ref: '#/components/schemas/Specialty'
         required: true
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1816,7 +1897,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedSpecialty'
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -1836,7 +1917,7 @@ paths:
       tags:
       - specialties
       security:
-      - tokenAuth: []
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -2477,7 +2558,10 @@ components:
       properties:
         token:
           type: string
+        refresh:
+          type: string
       required:
+      - refresh
       - token
     Specialty:
       type: object
@@ -2494,8 +2578,53 @@ components:
     Token:
       type: object
       properties:
+        valid:
+          type: boolean
         token:
           type: string
+        refresh:
+          type: string
+      required:
+      - refresh
+      - token
+      - valid
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
       required:
       - token
     UnitsEnum:
@@ -2532,8 +2661,7 @@ components:
         * `Salt` - salt
         * `Fresh` - fresh
   securitySchemes:
-    tokenAuth:
-      type: apiKey
-      in: header
-      name: Authorization
-      description: Token-based authentication with required prefix "Token"
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
