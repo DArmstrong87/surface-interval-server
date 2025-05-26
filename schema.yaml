@@ -2135,9 +2135,14 @@ components:
           type: integer
           nullable: true
           readOnly: true
+        dive_count:
+          type: integer
+          nullable: true
+          readOnly: true
       required:
       - custom_gear_type
       - days_since_last_service
+      - dive_count
       - dives_since_last_service
       - due_for_service_days
       - due_for_service_dives
@@ -2450,6 +2455,10 @@ components:
           nullable: true
           readOnly: true
         due_for_service_dives:
+          type: integer
+          nullable: true
+          readOnly: true
+        dive_count:
           type: integer
           nullable: true
           readOnly: true
