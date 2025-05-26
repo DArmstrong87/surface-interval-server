@@ -38,6 +38,10 @@ class GearItem(models.Model):
         item_service = self.get_service_history().first()
         return item_service.service_date if item_service else None
 
+    @property
+    def dive_count(self) -> Optional[int]:
+        return GearDive.objects.filter(gear_item=self, dive__diver=self.diver).count()
+
     def _get_reference_date(self) -> Optional[date]:
         """
         Get the reference date for service calculations (last service or purchase date)
