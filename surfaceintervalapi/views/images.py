@@ -11,13 +11,13 @@ class ImageView(ModelViewSet):
     serializer_class = ImageSerializer
 
     def list(self, request):
-        images = Image.objects.filter(diver__user=request.auth.user)
+        images = Image.objects.filter(diver__user=request.user)
         serializer = ImageSerializer(images, many=True, context={"request": request})
         return Response(serializer.data)
 
     def destroy(self, request, pk):
         try:
-            image = Image.objects.get(pk=pk, diver__user=request.auth.user)
+            image = Image.objects.get(pk=pk, diver__user=request.user)
             image.delete()
             return Response({"Image deleted"}, status=status.HTTP_204_NO_CONTENT)
 

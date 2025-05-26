@@ -12,19 +12,19 @@ class CertCardView(ModelViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            cert = CertificationCard.objects.get(pk=pk, diver__user=request.auth.user)
+            cert = CertificationCard.objects.get(pk=pk, diver__user=request.user)
             serializer = CertCardSerializer(cert, context={"request": request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
     def list(self, request):
-        cert_cards = CertificationCard.objects.filter(diver__user=request.auth.user)
+        cert_cards = CertificationCard.objects.filter(diver__user=request.user)
         serializer = CertCardSerializer(cert_cards, many=True, context={"request": request})
         return Response(serializer.data)
 
     def create(self, request):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             cert = CertificationCard.objects.create(
@@ -42,7 +42,7 @@ class CertCardView(ModelViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             cert = CertificationCard.objects.get(diver=diver, pk=pk)
@@ -59,7 +59,7 @@ class CertCardView(ModelViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             cert = CertificationCard.objects.get(pk=pk, diver=diver)

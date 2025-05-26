@@ -3,6 +3,11 @@ from django.contrib import admin
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 from surfaceintervalapi.views import (
     register_user,
@@ -40,6 +45,9 @@ router.register(r"specialties", SpecialtyView, "specialty")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("register", register_user),
     path("login", login_user, name="login"),
     path("healthcheck", HealthCheckView.as_view(), name="healthcheck"),

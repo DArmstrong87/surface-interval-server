@@ -10,21 +10,21 @@ class CustomSpecialtyView(ModelViewSet):
     serializer_class = CustomSpecialtySerializer
 
     def retrieve(self, request, pk):
-        custom_specialty = CustomSpecialty.objects.get(pk=pk, diver__user=request.auth.user)
+        custom_specialty = CustomSpecialty.objects.get(pk=pk, diver__user=request.user)
         serializer = CustomSpecialtySerializer(
             custom_specialty, many=True, context={"request": request}
         )
         return Response(serializer.data)
 
     def list(self, request):
-        custom_specialty = CustomSpecialty.objects.filter(diver__user=request.auth.user)
+        custom_specialty = CustomSpecialty.objects.filter(diver__user=request.user)
         serializer = CustomSpecialtySerializer(
             custom_specialty, many=True, context={"request": request}
         )
         return Response(serializer.data)
 
     def create(self, request):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             custom_specialty = CustomSpecialty.objects.create(
@@ -41,7 +41,7 @@ class CustomSpecialtyView(ModelViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             custom_specialty = CustomSpecialty.objects.get(pk=pk, diver=diver)
@@ -53,7 +53,7 @@ class CustomSpecialtyView(ModelViewSet):
             return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def partial_update(self, request, pk):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             custom_specialty = CustomSpecialty.objects.get(diver=diver, pk=pk)

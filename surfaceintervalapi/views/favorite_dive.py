@@ -15,19 +15,19 @@ class DiveView(ModelViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            dive = Dive.objects.get(pk=pk, diver__user=request.auth.user)
+            dive = Dive.objects.get(pk=pk, diver__user=request.user)
             serializer = DiveSerializer(dive, context={"request": request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
     def list(self, request):
-        dives = Dive.objects.filter(diver__user=request.auth.user).order_by("dive_number")
+        dives = Dive.objects.filter(diver__user=request.user).order_by("dive_number")
         serializer = DiveSerializer(dives, many=True, context={"request": request})
         return Response(serializer.data)
 
     def create(self, request):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
         gear_set = GearSet.objects.get(diver=diver, pk=request.data["gearSet"])
         startPressure = request.data["startPressure"]
         endPressure = request.data["endPressure"]
@@ -57,7 +57,7 @@ class DiveView(ModelViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def partial_update(self, request, pk):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
         gear_set = GearSet.objects.get(diver=diver, pk=request.data["gearSet"])
 
         try:
@@ -82,7 +82,7 @@ class DiveView(ModelViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             dive = Dive.objects.get(pk=pk, diver=diver)
@@ -95,7 +95,7 @@ class DiveView(ModelViewSet):
 
     @action(methods=["post", "delete"], detail=True, url_path="star")
     def star(self, request, pk):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
         dive = Dive.objects.get(pk=pk, diver=diver)
 
         if request.method == "POST":

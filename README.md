@@ -152,13 +152,17 @@ password
 ```
 
 #### Generate Token 🪙
-Alternatively, run `python manage.py drf_create_token <username>` from the CLI which will show:
+
 ```
-Generated token <TOKEN> for user TestUser
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"username": "TestUser@surfaceinterval.app", "password": "123"}' \
+  http://localhost:8000/api/token/
 ```
 
 ### API Authorization Header 🔒
-Provide the token in the header as `Authorization: TOKEN "your_token"`
+Provide the token in the header as `Authorization: Bearer "<TOKEN>"`
 
 ### Generate API spec
 ```

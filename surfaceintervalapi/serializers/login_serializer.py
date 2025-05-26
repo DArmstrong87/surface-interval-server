@@ -8,4 +8,6 @@ class LoginSerializer(serializers.Serializer):
 
 
 class TokenSerializer(serializers.Serializer):
+    valid = serializers.BooleanField()
     token = serializers.CharField()
+    refresh = serializers.CharField()

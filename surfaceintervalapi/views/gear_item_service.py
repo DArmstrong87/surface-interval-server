@@ -22,7 +22,7 @@ class GearItemServiceView(ModelViewSet):
 
         # See if this item is being tracked for service
         gear_item_service_interval_exists = GearItemServiceInterval.objects.filter(
-            gear_item__id=gear_item_id, gear_item__diver__user=request.auth.user
+            gear_item__id=gear_item_id, gear_item__diver__user=request.user
         ).exists()
         if not gear_item_service_interval_exists:
             return Response(
@@ -33,7 +33,7 @@ class GearItemServiceView(ModelViewSet):
             )
 
         try:
-            gear_item = GearItem.objects.get(pk=gear_item_id, diver__user=request.auth.user)
+            gear_item = GearItem.objects.get(pk=gear_item_id, diver__user=request.user)
             gear_item_service = GearItemService.objects.create(
                 gear_item=gear_item,
                 service_date=service_date,
@@ -51,7 +51,7 @@ class GearItemServiceView(ModelViewSet):
     def destroy(self, request, pk=None):
         try:
             gear_item_service = GearItemService.objects.get(
-                pk=pk, gear_item__diver__user=request.auth.user
+                pk=pk, gear_item__diver__user=request.user
             )
             gear_item_service.delete()
 
@@ -67,7 +67,7 @@ class GearItemServiceView(ModelViewSet):
             gear_item_id = request.query_params.get("gearItemId")
             if gear_item_id:
                 gear_item_services = GearItemService.objects.filter(
-                    gear_item__id=gear_item_id, gear_item__diver__user=request.auth.user
+                    gear_item__id=gear_item_id, gear_item__diver__user=request.user
                 ).order_by("-service_date")
             else:
                 return Response(

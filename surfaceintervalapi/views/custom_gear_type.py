@@ -10,14 +10,14 @@ class CustomGearTypeView(ModelViewSet):
     serializer_class = CustomGearTypeSerializer
 
     def list(self, request):
-        custom_gear_type = CustomGearType.objects.filter(diver__user=request.auth.user)
+        custom_gear_type = CustomGearType.objects.filter(diver__user=request.user)
         serializer = CustomGearTypeSerializer(
             custom_gear_type, many=True, context={"request": request}
         )
         return Response(serializer.data)
 
     def create(self, request):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             custom_gear_type = CustomGearType.objects.create(
@@ -34,7 +34,7 @@ class CustomGearTypeView(ModelViewSet):
             return Response({"error": ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, pk=None):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             custom_gear_type = CustomGearType.objects.get(pk=pk, diver=diver)
@@ -46,7 +46,7 @@ class CustomGearTypeView(ModelViewSet):
             return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def partial_update(self, request, pk):
-        diver = Diver.objects.get(user=request.auth.user)
+        diver = Diver.objects.get(user=request.user)
 
         try:
             custom_gear_type = CustomGearType.objects.get(diver=diver, pk=pk)

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from surfaceintervalapi.models import Diver
 from surfaceintervalapi.types import IMPERIAL_UNIT
@@ -16,8 +16,8 @@ class SiBaseTestCase(TestCase):
         self.user = User.objects.create_user(
             username="TestUser", email="test@example.com", password="123"
         )
-        self.token = Token.objects.create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        self.token = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token.access_token}")
 
         print_test_action("Creating test diver for SI Base Test Case")
         self.diver = Diver.objects.create(
@@ -34,6 +34,5 @@ class SiBaseTestCase(TestCase):
 
     def tearDown(self):
         self.user.delete()
-        self.token.delete()
         self.diver.delete()
         super().tearDown()
