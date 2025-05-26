@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+./bin/generate_erd.py
+python3 manage.py spectacular --file schema.yaml

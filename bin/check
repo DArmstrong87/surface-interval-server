@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+set -e
+
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
-
 
 
 echo "${green}Running linting check...${reset}"
@@ -10,6 +11,7 @@ if ruff . ; then
     echo "${green}Linting checks passed${reset}"
 else
     echo "${red}Linting checks failed${reset}"
+    exit 1
 fi
 echo "=====================
 "
@@ -19,6 +21,22 @@ if black . --check ; then
     echo "${green}Formatting checks passed${reset}"
 else
     echo "${red}Formatting checks failed${reset}"
+    exit 1
+fi
+echo "=====================
+"
+
+echo "${green}Checking for schema.yaml updates...${reset}"
+# Generate new schema
+python manage.py spectacular --file schema.yaml.new
+# Check for differences
+if diff -q schema.yaml schema.yaml.new >/dev/null 2>&1; then
+    echo "${green}Schema is up to date${reset}"
+    rm schema.yaml.new
+else
+    echo "${red}API spec needs to be updated. Run: ${green}bin/update_schema${reset} to update both the schema and the ERD"
+    rm schema.yaml.new
+    exit 1
 fi
 echo "=====================
 "
@@ -28,4 +46,7 @@ if python manage.py test; then
     echo "${green}Unit tests passed${reset}"
 else
     echo "${red}Unit tests failed${reset}"
+    exit 1
 fi
+echo "=====================
+"

@@ -3,30 +3,60 @@ name: Linting, formatting, and testing
 on:
   push:
     branches:
-      - '*'
+    - '*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.11]
+        python-version: [ 3.11 ]
+
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+      SECRET_KEY: github-actions-secret-key
+      DEBUG: "False"
+      ALLOWED_HOSTS: localhost,127.0.0.1
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+        - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      - name: Run Ruff linting
-        run: ruff .
+    - name: Run Ruff linting
+      run: ruff .
 
-      - name: Run Black formatting check
-        run: black . --check
+    - name: Run Black formatting check
+      run: black . --check
 
-      - name: Running Unit Tests
-        run: |
-          python3 manage.py test
+    - name: Check API schema
+      run: |
+        python manage.py spectacular --file schema.yaml.new
+        if diff -q schema.yaml schema.yaml.new >/dev/null 2>&1; then
+          echo "Schema is up to date"
+          rm schema.yaml.new
+        else
+          echo "API spec needs to be updated. Please run: bin/update_schema"
+          rm schema.yaml.new
+          exit 1
+        fi
+
+    - name: Running Unit Tests
+      run: |
+        python3 manage.py test
