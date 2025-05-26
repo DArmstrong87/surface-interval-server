@@ -51,6 +51,7 @@ class GearItemSerializer(serializers.ModelSerializer):
             "days_since_last_service",
             "due_for_service_days",
             "due_for_service_dives",
+            "dive_count",
         )
         depth = 1
 
