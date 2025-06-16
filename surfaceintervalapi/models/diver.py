@@ -6,6 +6,7 @@ from django.forms.models import model_to_dict
 from surfaceintervalapi.utils import get_dive_air_consumption
 
 from surfaceintervalapi.models.dive import Dive, DiveSpecialty
+from surfaceintervalapi.utils import invalidate_cache
 
 
 class Diver(models.Model):
@@ -16,6 +17,16 @@ class Diver(models.Model):
     units = models.CharField(
         max_length=255, choices=[("Metric", "metric"), ("Imperial", "imperial")]
     )
+
+    def save(self, *args, **kwargs):
+        key = f"user:{self.user.id}:diver"
+        invalidate_cache(key)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        key = f"user:{self.user.id}:diver"
+        invalidate_cache(key)
+        super().save(*args, **kwargs)
 
     # Dynamic Properties:
     @property

@@ -22,7 +22,8 @@ class Dive(models.Model):
     def get_cache_keys(self) -> list:
         dives_key = f"user:{self.diver.user.id}:dives"
         dive_key = f"user:{self.diver.user.id}:dive:{self.pk}"
-        return [dives_key, dive_key]
+        diver_key = f"user:{self.diver.user.id}:diver"
+        return [dives_key, dive_key, diver_key]
 
     def save(self, *args, **kwargs):
         keys = self.get_cache_keys()
