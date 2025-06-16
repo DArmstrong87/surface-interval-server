@@ -54,32 +54,38 @@ git clone https://github.com/DArmstrong87/surface-interval-server.git
 cd surface-interval-server
 ```
 
-#### 2. Create and activate virtual environment
+#### 2. Ensure Python>=3.10 is installed
 ```
-python3 -m venv env
-source env/bin/activate
+python -V
+python3 -V
 ```
 
-#### 3. Install requirements
+If not, install it.
+
+#### 3. Create and activate virtual environment
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### 4. Install requirements
 ```
 pip install -r requirements.txt
 ```
 
-#### 4. Add .env
+#### 5. Add .env
 ```
 touch .env
+echo "DATABASE_URL=123" >> .env
+echo "DEBUG=True" >> .env
+echo "DB_HOST=localhost" >> .env
+echo "DB_PORT=5432" >> .env
+echo "POSTGRES_DB=surface-interval-db" >> .env
+echo "POSTGRES_USER=surfaceinterval" >> .env
+echo "POSTGRES_PASSWORD=123" >> .env
 ```
 
-```
-DEBUG=True
-DB_HOST=surface-interval-db
-DB_PORT=5432
-POSTGRES_DB=surface-interval-db
-POSTGRES_USER=surfaceinterval
-POSTGRES_PASSWORD=123
-```
-
-#### 5. Setup and seed database
+#### 6. Setup and seed database
 
 #### Containerized (recommended) 📦
 1. Ensure docker is installed: https://docs.docker.com/engine/install/
@@ -88,7 +94,7 @@ POSTGRES_PASSWORD=123
     2. Alternatively, you can stop the `surface-interval-server` container and run the server from the terminal, but you'll need to change your db host to `127.0.0.1` in your .env.
 3. Run `docker-compose exec surface-interval-server bin/dbseed` which will install fixtures and seed the database.
 
-That's it! 
+✅ You're done!
 
 #### Non-containerized ⌨️
 1. #### Install postgres
@@ -122,6 +128,9 @@ That's it!
 6. #### Run migrations
 - `python manage.py migrate`
 
+7. #### Seed database
+- `bin/dbseed`
+
 
 ## ▶️ USING THE API
 
@@ -131,7 +140,14 @@ That's it!
 
 <b>Non-Docker:</b> Run `bin/pgconnect` -- This automatically enters your user password as stored in the .env file to connect.
 
-⚠️ Endpoints require a token. The token is tied to a user and is provided by logging in, registering or running the `drf_create_token` command.
+⚠️ Endpoints require a token. The token is tied to a user and is provided by logging in using Postman, the UI or curl:
+```
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"email": "testuser@surfaceinterval.app", "password": "123"}' \
+  http://localhost:8000/login
+```
 
 #### Register New User 🪪
 As long as you ran the `bin/dbseed` command, you should not have to do this but for registering a new user and testing the `/register` endpoint, provide the following:
@@ -147,22 +163,12 @@ units (provide 'metric' or 'imperial')
 #### Login and Tokens
 Access the /login endpoint and provide the following:
 ```
-username
+email
 password
 ```
 
-#### Generate Token 🪙
-
-```
-curl \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"username": "TestUser@surfaceinterval.app", "password": "123"}' \
-  http://localhost:8000/api/token/
-```
-
 ### API Authorization Header 🔒
-Provide the token in the header as `Authorization: Bearer "<TOKEN>"`
+Provide the token (by logging in or from the curl command) in the header as `Authorization: Bearer "<TOKEN>"`
 
 ### Generate API spec
 ```
