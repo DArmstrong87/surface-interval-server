@@ -8,6 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from surfaceintervalapi.models import Dive, Diver, FavoriteDive, GearSet, Image
 from surfaceintervalapi.serializers import DiveSerializer, ImageSerializer
+from surfaceintervalapi.utils import get_values_from_cache, cache_values
 
 
 class DiveView(ModelViewSet):
@@ -16,15 +17,27 @@ class DiveView(ModelViewSet):
 
     def retrieve(self, request, pk=None):
         try:
+            cache_key = f"user:{request.user.id}:dive:{pk}"
+            cached_dive = get_values_from_cache(cache_key)
+            if cached_dive:
+                return Response(cached_dive, status=status.HTTP_200_OK)
+
             dive = Dive.objects.get(pk=pk, diver__user=request.user)
             serializer = DiveSerializer(dive, context={"request": request})
+            cache_values(cache_key, serializer.data, 10)
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
     def list(self, request):
+        cache_key = f"user:{request.user.id}:dives"
+        cached_dives = get_values_from_cache(cache_key)
+        if cached_dives:
+            return Response(cached_dives, status=status.HTTP_200_OK)
+
         dives = Dive.objects.filter(diver__user=request.user).order_by("date", "id")
         serializer = DiveSerializer(dives, many=True, context={"request": request})
+        cache_values(cache_key, serializer.data, 10)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):

@@ -1,4 +1,5 @@
 from django.db import models
+from surfaceintervalapi.utils import invalidate_multiple_cache_keys
 
 from surfaceintervalapi.models.favorite_dive import FavoriteDive
 from surfaceintervalapi.models.dive_specialty import DiveSpecialty
@@ -17,6 +18,21 @@ class Dive(models.Model):
     start_pressure = models.IntegerField(blank=True, null=True)
     end_pressure = models.IntegerField(blank=True, null=True)
     tank_vol = models.FloatField(default=80, blank=True, null=True)
+
+    def get_cache_keys(self) -> list:
+        dives_key = f"user:{self.diver.user.id}:dives"
+        dive_key = f"user:{self.diver.user.id}:dive:{self.pk}"
+        return [dives_key, dive_key]
+
+    def save(self, *args, **kwargs):
+        keys = self.get_cache_keys()
+        invalidate_multiple_cache_keys(keys)
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        keys = self.get_cache_keys()
+        invalidate_multiple_cache_keys(keys)
+        super().save(*args, **kwargs)
 
     @property
     def air_consumption(self) -> float | None:

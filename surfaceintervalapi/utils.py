@@ -1,4 +1,5 @@
 from decimal import Decimal, ROUND_HALF_UP
+from django.core.cache import cache
 
 CU_FT_TO_LITERS_FACTOR = 28.3168
 IMPERIAL_ATM_FACTOR = 33
@@ -71,3 +72,26 @@ def get_average_air_consumption(dives: list) -> dict:
         "cu_ft_min": rounded_avg_air_consumption_cu_ft_min,
         "ltrs_min": rounded_avg_air_consumption_ltrs_min,
     }
+
+
+def get_values_from_cache(key: str) -> dict:
+    values = cache.get(key)
+    if values is not None:
+        print(f"Returning values '{key}' in cache.")
+    return values
+
+
+def cache_values(key: str, data, timeout_min: int):
+    cache.set(key, data, timeout_min * 60)
+    print(f"Caching values '{key}'")
+
+
+def invalidate_cache(key: str):
+    cache.delete(key)
+    print(f"Deleting cache key '{key}'")
+
+
+def invalidate_multiple_cache_keys(keys: list):
+    for key in keys:
+        cache.delete(key)
+        print(f"Invalidating cache key '{key}'")
