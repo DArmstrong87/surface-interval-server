@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "username": "TestUser",
-            "email": "none@none.com",
+            "email": "testuser@surfaceinterval.app",
             "password": "pbkdf2_sha256$600000$JHwje69fW3m019XC2AZY0C$+nd58iN041wQLJlinIxZcRnVhjJfqwt3HC0R2YPW9Y4=",
             "first_name": "Test",
             "last_name": "User",
