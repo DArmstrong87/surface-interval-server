@@ -36,6 +36,7 @@ env = environ.Env(
     DB_HOST=(str, "127.0.0.1"),
     DB_PORT=(str, "5432"),
     DATABASE_URL=(str, ""),
+    REDIS_URL=(str, "redis://127.0.0.1:6379/1")
 )
 
 # Take environment variables from .env file
@@ -236,3 +237,15 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
+
+
+# ================================ CACHE ================================
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}

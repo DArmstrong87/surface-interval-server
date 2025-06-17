@@ -30,13 +30,13 @@ I originally built Surface Interval as my frontend capstone project at Nashville
 6. Support user-selected units (imperial vs metric) ✅
 7. Generate a swagger doc ✅
 8. Continuous Integration: Workflow with linting, formatting and unit tests ✅
-9. Continuous Deployment: Deploy project (TBD) ⏳
+9. Continuous Deployment: Deploy project ✅
 10. Custom Diver properties to calculate dive data ✅
 11. Complete functional UI ✅
 12. Apply styling to UI ✅
 13. Write some tests using mocked data ⏳
 14. Custom ratelimit decorator ⏳
-15. Caching ⏳
+15. Caching (Redis) ✅
 
 # Entity Relationship Diagram
 Generated using django-extensions' `graph_models` command. A custom command `bin/erd` modifies the `erd.dot` file to customize the png output.
@@ -73,6 +73,19 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Also install graphviz for using the bin/update_schema command. This command updates the schema as well as generates a new ERD image for the README.
+
+Ubuntu
+```
+sudo apt update
+sudo apt install graphviz
+```
+
+macOS
+```
+brew install graphviz
+```
+
 #### 5. Add .env
 ```
 touch .env
@@ -83,6 +96,7 @@ echo "DB_PORT=5432" >> .env
 echo "POSTGRES_DB=surface-interval-db" >> .env
 echo "POSTGRES_USER=surfaceinterval" >> .env
 echo "POSTGRES_PASSWORD=123" >> .env
+echo "REDIS_URL=redis://127.0.0.1:6379/1" >> .env
 ```
 
 #### 6. Setup and seed database
@@ -148,6 +162,13 @@ curl \
   -d '{"email": "testuser@surfaceinterval.app", "password": "123"}' \
   http://localhost:8000/login
 ```
+
+#### Using Redis Cache
+This project is designed to handle returning data with or without Redis caching. Performance can be enhanced by running Redis. Running Redis will depend on how it was installed.
+- macOS:  `brew services start redis`
+- Apt: `sudo systemctl start redis`
+- Docker: It should be running automatically. If not, run `docker run -d --name redis -p 6379:6379 redis`
+
 
 #### Register New User 🪪
 As long as you ran the `bin/dbseed` command, you should not have to do this but for registering a new user and testing the `/register` endpoint, provide the following:

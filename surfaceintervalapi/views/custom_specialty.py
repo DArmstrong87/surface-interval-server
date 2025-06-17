@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from surfaceintervalapi.models import Diver, CustomSpecialty
 from surfaceintervalapi.serializers import CustomSpecialtySerializer
+from surfaceintervalapi.types import CACHE_TIME_MINS
+from surfaceintervalapi.utils import cache_values, get_values_from_cache
 
 
 class CustomSpecialtyView(ModelViewSet):
@@ -10,18 +12,29 @@ class CustomSpecialtyView(ModelViewSet):
     serializer_class = CustomSpecialtySerializer
 
     def retrieve(self, request, pk):
+        cache_key = f"user:{request.user.id}:custom_specialty:{pk}"
+        cached_custom_specialty = get_values_from_cache(cache_key)
+        if cached_custom_specialty:
+            return Response(cached_custom_specialty, status=status.HTTP_200_OK)
+
         custom_specialty = CustomSpecialty.objects.get(pk=pk, diver__user=request.user)
         serializer = CustomSpecialtySerializer(
             custom_specialty, many=True, context={"request": request}
         )
-        return Response(serializer.data)
+        cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def list(self, request):
+        cache_key = f"user:{request.user.id}:custom_specialties"
+        cached_custom_specialties = get_values_from_cache(cache_key)
+        if cached_custom_specialties:
+            return Response(cached_custom_specialties, status=status.HTTP_200_OK)
         custom_specialty = CustomSpecialty.objects.filter(diver__user=request.user)
         serializer = CustomSpecialtySerializer(
             custom_specialty, many=True, context={"request": request}
         )
-        return Response(serializer.data)
+        cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
         diver = Diver.objects.get(user=request.user)

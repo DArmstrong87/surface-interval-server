@@ -1,7 +1,10 @@
+import redis
 from django.test import TestCase
-from rest_framework.test import APIClient
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
+from django.core.cache import cache
+import redis.exceptions
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.test import APIClient
 from surfaceintervalapi.models import Diver
 from surfaceintervalapi.types import IMPERIAL_UNIT
 from tests.utils import print_test_action, print_test_setup
@@ -9,6 +12,11 @@ from tests.utils import print_test_action, print_test_setup
 
 class SiBaseTestCase(TestCase):
     def setUp(self):
+        try:
+            cache.clear()
+        except redis.exceptions.ConnectionError:
+            pass
+
         print_test_setup(self)
         self.client = APIClient()
 

@@ -13,7 +13,7 @@ class ImageView(ModelViewSet):
     def list(self, request):
         images = Image.objects.filter(diver__user=request.user)
         serializer = ImageSerializer(images, many=True, context={"request": request})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk):
         try:

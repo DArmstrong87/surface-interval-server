@@ -110,4 +110,4 @@ def register_user(request):
 
     refresh = RefreshToken.for_user(diver.user)
     data = {"token": str(refresh.access_token), "refresh": str(refresh)}
-    return Response(data)
+    return Response(data, status=status.HTTP_201_CREATED)

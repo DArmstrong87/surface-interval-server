@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
+import os
+import shutil
 import subprocess
 
 
 def generate_erd():
     """Generate the initial ERD using django-extensions."""
     print("Generating initial ERD...")
-    exclude_models = "Session,AbstractBaseSession,LogEntry,ContentType,Permission,Group,PermissionsMixin,AbstractBaseUser,AbstractUser,UserManager"
+    exclude_models = "Session,AbstractBaseSession,LogEntry,ContentType,Permission,Group,PermissionsMixin,AbstractBaseUser,AbstractUser,UserManager,CacheInvalidationMixin"
+    os.makedirs("tmp", exist_ok=True)
     subprocess.run(
         [
             "python",
@@ -16,7 +19,8 @@ def generate_erd():
             f"{exclude_models}",
             "-o",
             "tmp/erd.dot",
-        ]
+        ],
+        check=True,
     )
 
 
@@ -48,6 +52,8 @@ def customize_erd():
 def render_image():
     """Render the final DOT file to PNG."""
     print("Rendering final image...")
+    if not shutil.which("dot"):
+        raise RuntimeError("Graphviz `dot` executable not found. Please install Graphviz.")
     subprocess.run(["dot", "-Gdpi=300", "-Tpng", "tmp/erd.dot", "-o", "images/erd.png"])
 
 
@@ -59,7 +65,7 @@ def main():
         render_image()
         print("ERD generation complete! Check images/erd.png")
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error generating or customizing ERD: {e}")
 
 
 if __name__ == "__main__":

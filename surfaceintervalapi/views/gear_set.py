@@ -4,6 +4,8 @@ from rest_framework.response import Response
 
 from surfaceintervalapi.models import Diver, GearSet, GearItem
 from surfaceintervalapi.serializers import GearSetSerializer
+from surfaceintervalapi.types import CACHE_TIME_MINS
+from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
 
 
 class GearSetView(ModelViewSet):
@@ -12,9 +14,15 @@ class GearSetView(ModelViewSet):
 
     def retrieve(self, request, pk):
         try:
+            cache_key = get_cache_key(request.user.id, "gear_set", pk)
+            cached_gear_set = get_values_from_cache(cache_key)
+            if cached_gear_set:
+                return Response(cached_gear_set, status=status.HTTP_200_OK)
+
             gear_set = GearSet.objects.get(pk=pk, diver__user=request.user)
             serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
-            return Response(serializer.data)
+            cache_values(cache_key, gear_set, CACHE_TIME_MINS)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except GearSet.DoesNotExist:
             return Response(
                 {"error": "GearSet matching query does not exist."},
@@ -23,9 +31,15 @@ class GearSetView(ModelViewSet):
 
     def list(self, request):
         try:
+            cache_key = get_cache_key(request.user.id, "gear_sets")
+            cached_gear_sets = get_values_from_cache(cache_key)
+            if cached_gear_sets:
+                return Response(cached_gear_sets, status=status.HTTP_200_OK)
+
             gear_sets = GearSet.objects.filter(diver__user=request.user)
             serializer = GearSetSerializer(gear_sets, many=True, context={"request": request})
-            return Response(serializer.data)
+            cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return Response(
                 {"error": f"An error occurred while retrieving gear sets: {str(ex)}"},

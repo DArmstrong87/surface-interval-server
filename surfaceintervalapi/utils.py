@@ -1,4 +1,5 @@
 from decimal import Decimal, ROUND_HALF_UP
+from django.core.cache import cache
 
 CU_FT_TO_LITERS_FACTOR = 28.3168
 IMPERIAL_ATM_FACTOR = 33
@@ -71,3 +72,44 @@ def get_average_air_consumption(dives: list) -> dict:
         "cu_ft_min": rounded_avg_air_consumption_cu_ft_min,
         "ltrs_min": rounded_avg_air_consumption_ltrs_min,
     }
+
+
+def get_values_from_cache(key: str) -> dict:
+    try:
+        values = cache.get(key)
+        if values is not None:
+            print(f"Returning '{key}' values from cache.")
+        return values
+    except Exception as ex:
+        print(f"Exception getting cache values key: {key}, exception: {ex}")
+        return None
+
+
+def cache_values(key: str, data, timeout_min: int):
+    try:
+        cache.set(key, data, timeout_min * 60)
+        print(f"Caching values '{key}'")
+    except Exception as ex:
+        print(f"Unable to set cache key {key}: {ex}")
+
+
+def invalidate_cache(key: str):
+    try:
+        cache.delete(key)
+        print(f"Deleting cache key '{key}'")
+    except Exception as ex:
+        print(f"Unable to invalidate cache key {key}: {ex}")
+
+
+def invalidate_multiple_cache_keys(keys: list):
+    try:
+        for key in keys:
+            cache.delete(key)
+            print(f"Invalidating cache key '{key}'")
+    except Exception as ex:
+        print(f"Unable to invalidate cache keys {keys}: {ex}")
+
+
+def get_cache_key(user_id: int, model: str, pk: int = None):
+    pk = "" if pk is None else f":{pk}"
+    return f"user:{user_id}:{model}{pk}"
