@@ -20,7 +20,7 @@ class GearSetView(ModelViewSet):
 
             gear_set = GearSet.objects.get(pk=pk, diver__user=request.user)
             serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
-            cache_values(cache_key, gear_set)
+            cache_values(cache_key, gear_set, 10)
             return Response(serializer.data)
         except GearSet.DoesNotExist:
             return Response(

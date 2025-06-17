@@ -26,7 +26,7 @@ class Diver(models.Model):
     def delete(self, *args, **kwargs):
         key = f"user:{self.user.id}:diver"
         invalidate_cache(key)
-        super().save(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     # Dynamic Properties:
     @property

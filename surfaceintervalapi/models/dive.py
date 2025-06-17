@@ -33,7 +33,7 @@ class Dive(models.Model):
     def delete(self, *args, **kwargs):
         keys = self.get_cache_keys()
         invalidate_multiple_cache_keys(keys)
-        super().save(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     @property
     def air_consumption(self) -> float | None:
