@@ -1,3 +1,4 @@
+from .cache_invalidation_mixin import CacheInvalidationMixin
 from .certification_card import CertificationCard
 from .custom_gear_type import CustomGearType
 from .custom_specialty import CustomSpecialty

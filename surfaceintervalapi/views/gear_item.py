@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from surfaceintervalapi.models import Diver, GearItem, CustomGearType, GearType
 from surfaceintervalapi.serializers import GearItemSerializer
-from surfaceintervalapi.utils import cache_values, get_values_from_cache
+from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
 
 
 class GearItemView(ModelViewSet):
@@ -12,7 +12,7 @@ class GearItemView(ModelViewSet):
     serializer_class = GearItemSerializer
 
     def retrieve(self, request, pk):
-        cache_key = f"user:{request.user.id}:gear_item:{pk}"
+        cache_key = get_cache_key(request.user.id, "gear_item", pk)
         cached_gear_item = get_values_from_cache(cache_key)
         if cached_gear_item:
             return Response(cached_gear_item, status=status.HTTP_200_OK)
@@ -33,7 +33,7 @@ class GearItemView(ModelViewSet):
             return Response({"error": ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
-        cache_key = f"user:{request.user.id}:gear_items"
+        cache_key = get_cache_key(request.user.id, "gear_items")
         cached_gear_items = get_values_from_cache(cache_key)
         if cached_gear_items:
             return Response(cached_gear_items, status=status.HTTP_200_OK)

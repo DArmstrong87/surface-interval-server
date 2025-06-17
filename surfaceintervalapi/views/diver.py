@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from surfaceintervalapi.models import Diver
 from surfaceintervalapi.serializers import DiverSerializer
-from surfaceintervalapi.utils import cache_values, get_values_from_cache
+from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
 
 
 class DiverView(ModelViewSet):
@@ -15,7 +15,7 @@ class DiverView(ModelViewSet):
 
     def list(self, request):
         try:
-            cache_key = f"user:{request.user.id}:diver"
+            cache_key = get_cache_key(request.user.id, "diver")
             cached_diver = get_values_from_cache(cache_key)
             if cached_diver:
                 return Response(cached_diver, status=status.HTTP_200_OK)
@@ -28,7 +28,7 @@ class DiverView(ModelViewSet):
 
     def retrieve(self, request, pk=None):
         try:
-            cache_key = f"user:{request.user.id}:diver:{pk}"
+            cache_key = get_cache_key(request.user.id, "diver", pk)
             cached_diver = get_values_from_cache(cache_key)
             if cached_diver:
                 return Response(cached_diver, status=status.HTTP_200_OK)

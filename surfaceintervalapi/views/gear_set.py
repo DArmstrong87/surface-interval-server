@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from surfaceintervalapi.models import Diver, GearSet, GearItem
 from surfaceintervalapi.serializers import GearSetSerializer
-from surfaceintervalapi.utils import cache_values, get_values_from_cache
+from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
 
 
 class GearSetView(ModelViewSet):
@@ -13,7 +13,7 @@ class GearSetView(ModelViewSet):
 
     def retrieve(self, request, pk):
         try:
-            cache_key = f"user:{request.user.id}:gear_set:{pk}"
+            cache_key = get_cache_key(request.user.id, "gear_set", pk)
             cached_gear_set = get_values_from_cache(cache_key)
             if cached_gear_set:
                 return Response(cached_gear_set, status=status.HTTP_200_OK)
@@ -30,7 +30,7 @@ class GearSetView(ModelViewSet):
 
     def list(self, request):
         try:
-            cache_key = f"user:{request.user.id}:gear_sets"
+            cache_key = get_cache_key(request.user.id, "gear_sets")
             cached_gear_sets = get_values_from_cache(cache_key)
             if cached_gear_sets:
                 return Response(cached_gear_sets, status=status.HTTP_200_OK)

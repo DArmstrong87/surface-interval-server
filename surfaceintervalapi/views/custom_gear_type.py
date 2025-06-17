@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from surfaceintervalapi.models import Diver, CustomGearType
 from surfaceintervalapi.serializers import CustomGearTypeSerializer
+from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
+from surfaceintervalapi.types import CACHE_TIME_MINS
 
 
 class CustomGearTypeView(ModelViewSet):
@@ -10,11 +12,17 @@ class CustomGearTypeView(ModelViewSet):
     serializer_class = CustomGearTypeSerializer
 
     def list(self, request):
+        cache_key = get_cache_key(request.user.id, "custom_gear_types")
+        cached_custom_gear_types = get_values_from_cache(cache_key)
+        if cached_custom_gear_types:
+            return Response(cached_custom_gear_types, status=status.HTTP_200_OK)
+
         custom_gear_type = CustomGearType.objects.filter(diver__user=request.user)
         serializer = CustomGearTypeSerializer(
             custom_gear_type, many=True, context={"request": request}
         )
-        return Response(serializer.data)
+        cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
         diver = Diver.objects.get(user=request.user)

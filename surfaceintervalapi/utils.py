@@ -75,10 +75,14 @@ def get_average_air_consumption(dives: list) -> dict:
 
 
 def get_values_from_cache(key: str) -> dict:
-    values = cache.get(key)
-    if values is not None:
-        print(f"Returning values '{key}' in cache.")
-    return values
+    try:
+        values = cache.get(key)
+        if values is not None:
+            print(f"Returning values '{key}' in cache.")
+        return values
+    except Exception as ex:
+        print(f"Exception getting cache values key: {key}, exception: {ex}")
+        return None
 
 
 def cache_values(key: str, data, timeout_min: int):
@@ -95,3 +99,8 @@ def invalidate_multiple_cache_keys(keys: list):
     for key in keys:
         cache.delete(key)
         print(f"Invalidating cache key '{key}'")
+
+
+def get_cache_key(user_id: int, model: str, pk: int = None):
+    pk = "" if pk is None else f":{pk}"
+    return f"user:{user_id}:{model}{pk}"

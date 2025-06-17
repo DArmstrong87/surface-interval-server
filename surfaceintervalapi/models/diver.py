@@ -5,11 +5,13 @@ from surfaceintervalapi.utils import get_air_consumption_cu_ft_min, get_average_
 from django.forms.models import model_to_dict
 from surfaceintervalapi.utils import get_dive_air_consumption
 
-from surfaceintervalapi.models.dive import Dive, DiveSpecialty
-from surfaceintervalapi.utils import invalidate_cache
+from surfaceintervalapi.models import CacheInvalidationMixin
+from surfaceintervalapi.models.dive import Dive
+from surfaceintervalapi.models.dive_specialty import DiveSpecialty
+from surfaceintervalapi.utils import get_cache_key
 
 
-class Diver(models.Model):
+class Diver(CacheInvalidationMixin, models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     default_gear_set = models.ForeignKey(
         "GearSet", null=True, blank=True, on_delete=models.DO_NOTHING, related_name="GearSet"
@@ -18,15 +20,10 @@ class Diver(models.Model):
         max_length=255, choices=[("Metric", "metric"), ("Imperial", "imperial")]
     )
 
-    def save(self, *args, **kwargs):
-        key = f"user:{self.user.id}:diver"
-        invalidate_cache(key)
-        super().save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        key = f"user:{self.user.id}:diver"
-        invalidate_cache(key)
-        super().delete(*args, **kwargs)
+    def get_model_cache_keys(self) -> list[str]:
+        dives_key = get_cache_key(self.user.id, "dives")
+        diver_key = get_cache_key(self.user.id, "diver")
+        return [dives_key, diver_key]
 
     # Dynamic Properties:
     @property

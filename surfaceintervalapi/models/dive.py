@@ -1,11 +1,11 @@
 from django.db import models
-from surfaceintervalapi.utils import invalidate_multiple_cache_keys
-
-from surfaceintervalapi.models.favorite_dive import FavoriteDive
+from surfaceintervalapi.models.cache_invalidation_mixin import CacheInvalidationMixin
 from surfaceintervalapi.models.dive_specialty import DiveSpecialty
+from surfaceintervalapi.models.favorite_dive import FavoriteDive
+from surfaceintervalapi.utils import get_cache_key
 
 
-class Dive(models.Model):
+class Dive(CacheInvalidationMixin, models.Model):
     diver = models.ForeignKey("Diver", on_delete=models.CASCADE)
     date = models.DateField()
     gear_set = models.ForeignKey("GearSet", on_delete=models.DO_NOTHING, null=True)
@@ -19,21 +19,11 @@ class Dive(models.Model):
     end_pressure = models.IntegerField(blank=True, null=True)
     tank_vol = models.FloatField(default=80, blank=True, null=True)
 
-    def get_cache_keys(self) -> list:
-        dives_key = f"user:{self.diver.user.id}:dives"
-        dive_key = f"user:{self.diver.user.id}:dive:{self.pk}"
-        diver_key = f"user:{self.diver.user.id}:diver"
+    def get_model_cache_keys(self) -> list[str]:
+        dives_key = get_cache_key(self.diver.user.id, "dives")
+        dive_key = get_cache_key(self.diver.user.id, "dive", self.pk)
+        diver_key = get_cache_key(self.diver.user.id, "diver")
         return [dives_key, dive_key, diver_key]
-
-    def save(self, *args, **kwargs):
-        keys = self.get_cache_keys()
-        invalidate_multiple_cache_keys(keys)
-        super().save(*args, **kwargs)
-
-    def delete(self, *args, **kwargs):
-        keys = self.get_cache_keys()
-        invalidate_multiple_cache_keys(keys)
-        super().delete(*args, **kwargs)
 
     @property
     def air_consumption(self) -> float | None:
