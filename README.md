@@ -163,6 +163,13 @@ curl \
   http://localhost:8000/login
 ```
 
+#### Using Redis Cache
+This project is designed to handle returning data with or without Redis caching. Performance can be enhanced by running Redis. Running Redis will depend on how it was installed.
+- macOS:  `brew services start redis`
+- Apt: `sudo systemctl start redis`
+- Docker: It should be running automatically. If not, run `docker run -d --name redis -p 6379:6379 redis`
+
+
 #### Register New User 🪪
 As long as you ran the `bin/dbseed` command, you should not have to do this but for registering a new user and testing the `/register` endpoint, provide the following:
 ```
