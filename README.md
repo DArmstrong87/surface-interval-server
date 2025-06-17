@@ -30,13 +30,13 @@ I originally built Surface Interval as my frontend capstone project at Nashville
 6. Support user-selected units (imperial vs metric) ✅
 7. Generate a swagger doc ✅
 8. Continuous Integration: Workflow with linting, formatting and unit tests ✅
-9. Continuous Deployment: Deploy project (TBD) ⏳
+9. Continuous Deployment: Deploy project ✅
 10. Custom Diver properties to calculate dive data ✅
 11. Complete functional UI ✅
 12. Apply styling to UI ✅
 13. Write some tests using mocked data ⏳
 14. Custom ratelimit decorator ⏳
-15. Caching ⏳
+15. Caching (Redis) ✅
 
 # Entity Relationship Diagram
 Generated using django-extensions' `graph_models` command. A custom command `bin/erd` modifies the `erd.dot` file to customize the png output.
