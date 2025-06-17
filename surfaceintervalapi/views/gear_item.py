@@ -4,6 +4,7 @@ from rest_framework.response import Response
 
 from surfaceintervalapi.models import Diver, GearItem, CustomGearType, GearType
 from surfaceintervalapi.serializers import GearItemSerializer
+from surfaceintervalapi.types import CACHE_TIME_MINS
 from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
 
 
@@ -23,7 +24,7 @@ class GearItemView(ModelViewSet):
             serializer = GearItemSerializer(
                 gear_item, many=False, context={"request": request, "timezone": tz}
             )
-            cache_values(cache_key, serializer.data, 10)
+            cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except GearItem.DoesNotExist:
             return Response(
@@ -40,7 +41,7 @@ class GearItemView(ModelViewSet):
 
         gear_items = GearItem.objects.filter(diver__user=request.user)
         serializer = GearItemSerializer(gear_items, many=True, context={"request": request})
-        cache_values(cache_key, serializer.data, 10)
+        cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):

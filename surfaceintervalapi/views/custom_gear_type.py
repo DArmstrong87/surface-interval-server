@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from surfaceintervalapi.models import Diver, CustomGearType
 from surfaceintervalapi.serializers import CustomGearTypeSerializer
-from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
 from surfaceintervalapi.types import CACHE_TIME_MINS
+from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
 
 
 class CustomGearTypeView(ModelViewSet):

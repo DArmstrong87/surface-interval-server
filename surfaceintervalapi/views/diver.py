@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from surfaceintervalapi.models import Diver
 from surfaceintervalapi.serializers import DiverSerializer
+from surfaceintervalapi.types import CACHE_TIME_MINS
 from surfaceintervalapi.utils import cache_values, get_values_from_cache, get_cache_key
 
 
@@ -21,7 +22,7 @@ class DiverView(ModelViewSet):
                 return Response(cached_diver, status=status.HTTP_200_OK)
             diver = Diver.objects.get(user=request.user)
             serializer = DiverSerializer(diver, context={"request": request})
-            cache_values(cache_key, serializer.data, 10)
+            cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -35,7 +36,7 @@ class DiverView(ModelViewSet):
 
             diver = Diver.objects.get(pk=pk, user=request.user)
             serializer = DiverSerializer(diver, context={"request": request})
-            cache_values(cache_key, serializer.data, 10)
+            cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Diver.DoesNotExist:
             return Response(f"Diver {pk} does not exist.", status=status.HTTP_404_NOT_FOUND)
