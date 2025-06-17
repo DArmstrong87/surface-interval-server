@@ -17,8 +17,19 @@ jobs:
       SECRET_KEY: github-actions-secret-key
       DEBUG: "False"
       ALLOWED_HOSTS: localhost,127.0.0.1
+      REDIS_URL: redis://127.0.0.1:6379/1
 
     services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
       postgres:
         image: postgres:latest
         env:
@@ -56,6 +67,13 @@ jobs:
           rm schema.yaml.new
           exit 1
         fi
+
+    - name: Wait for Redis and Postgres
+      run: |
+        echo "Waiting for Redis..."
+        until nc -z localhost 6379; do sleep 1; done
+        echo "Waiting for Postgres..."
+        until nc -z localhost 5432; do sleep 1; done
 
     - name: Running Unit Tests
       run: |
