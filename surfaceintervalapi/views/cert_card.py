@@ -14,14 +14,14 @@ class CertCardView(ModelViewSet):
         try:
             cert = CertificationCard.objects.get(pk=pk, diver__user=request.user)
             serializer = CertCardSerializer(cert, context={"request": request})
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
     def list(self, request):
         cert_cards = CertificationCard.objects.filter(diver__user=request.user)
         serializer = CertCardSerializer(cert_cards, many=True, context={"request": request})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
         diver = Diver.objects.get(user=request.user)

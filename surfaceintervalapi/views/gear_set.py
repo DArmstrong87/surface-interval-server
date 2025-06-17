@@ -22,7 +22,7 @@ class GearSetView(ModelViewSet):
             gear_set = GearSet.objects.get(pk=pk, diver__user=request.user)
             serializer = GearSetSerializer(gear_set, many=False, context={"request": request})
             cache_values(cache_key, gear_set, CACHE_TIME_MINS)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except GearSet.DoesNotExist:
             return Response(
                 {"error": "GearSet matching query does not exist."},
@@ -39,7 +39,7 @@ class GearSetView(ModelViewSet):
             gear_sets = GearSet.objects.filter(diver__user=request.user)
             serializer = GearSetSerializer(gear_sets, many=True, context={"request": request})
             cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return Response(
                 {"error": f"An error occurred while retrieving gear sets: {str(ex)}"},

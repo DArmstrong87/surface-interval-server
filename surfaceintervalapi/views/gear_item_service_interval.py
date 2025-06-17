@@ -55,7 +55,7 @@ class GearItemServiceIntervalView(ModelViewSet):
             serializer = self.serializer_class(
                 gear_item_service_interval, many=False, context={"request": request}
             )
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except GearItemServiceInterval.DoesNotExist as ex:
             return Response({"message": ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:

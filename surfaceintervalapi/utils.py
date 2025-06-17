@@ -78,7 +78,7 @@ def get_values_from_cache(key: str) -> dict:
     try:
         values = cache.get(key)
         if values is not None:
-            print(f"Returning values '{key}' in cache.")
+            print(f"Returning '{key}' values from cache.")
         return values
     except Exception as ex:
         print(f"Exception getting cache values key: {key}, exception: {ex}")
@@ -86,19 +86,28 @@ def get_values_from_cache(key: str) -> dict:
 
 
 def cache_values(key: str, data, timeout_min: int):
-    cache.set(key, data, timeout_min * 60)
-    print(f"Caching values '{key}'")
+    try:
+        cache.set(key, data, timeout_min * 60)
+        print(f"Caching values '{key}'")
+    except Exception as ex:
+        print(f"Unable to set cache key {key}: {ex}")
 
 
 def invalidate_cache(key: str):
-    cache.delete(key)
-    print(f"Deleting cache key '{key}'")
+    try:
+        cache.delete(key)
+        print(f"Deleting cache key '{key}'")
+    except Exception as ex:
+        print(f"Unable to invalidate cache key {key}: {ex}")
 
 
 def invalidate_multiple_cache_keys(keys: list):
-    for key in keys:
-        cache.delete(key)
-        print(f"Invalidating cache key '{key}'")
+    try:
+        for key in keys:
+            cache.delete(key)
+            print(f"Invalidating cache key '{key}'")
+    except Exception as ex:
+        print(f"Unable to invalidate cache keys {keys}: {ex}")
 
 
 def get_cache_key(user_id: int, model: str, pk: int = None):

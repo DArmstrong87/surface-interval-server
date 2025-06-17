@@ -13,12 +13,15 @@ class GearTypeView(ModelViewSet):
     serializer_class = GearTypeSerializer
 
     def list(self, request):
-        cache_key = "gear_types"
-        cached_gear_types = get_values_from_cache(cache_key)
-        if cached_gear_types:
-            return Response(cached_gear_types, status=status.HTTP_200_OK)
+        try:
+            cache_key = "gear_types"
+            cached_gear_types = get_values_from_cache(cache_key)
+            if cached_gear_types:
+                return Response(cached_gear_types, status=status.HTTP_200_OK)
 
-        gear_types = GearType.objects.all()
-        serializer = GearTypeSerializer(gear_types, many=True, context={"request": request})
-        cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
-        return Response(serializer.data)
+            gear_types = GearType.objects.all()
+            serializer = GearTypeSerializer(gear_types, many=True, context={"request": request})
+            cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as ex:
+            return Response({"error": ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -26,7 +26,7 @@ class DiveView(ModelViewSet):
             dive = Dive.objects.get(pk=pk, diver__user=request.user)
             serializer = DiveSerializer(dive, context={"request": request})
             cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
 

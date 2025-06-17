@@ -17,14 +17,14 @@ class DiveView(ModelViewSet):
         try:
             dive = Dive.objects.get(pk=pk, diver__user=request.user)
             serializer = DiveSerializer(dive, context={"request": request})
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
     def list(self, request):
         dives = Dive.objects.filter(diver__user=request.user).order_by("dive_number")
         serializer = DiveSerializer(dives, many=True, context={"request": request})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
         diver = Diver.objects.get(user=request.user)

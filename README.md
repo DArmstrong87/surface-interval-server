@@ -73,6 +73,19 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Also install graphviz for using the bin/update_schema command. This command updates the schema as well as generates a new ERD image for the README.
+
+Ubuntu
+```
+sudo apt update
+sudo apt install graphviz
+```
+
+macOS
+```
+brew install graphviz
+```
+
 #### 5. Add .env
 ```
 touch .env
@@ -83,6 +96,7 @@ echo "DB_PORT=5432" >> .env
 echo "POSTGRES_DB=surface-interval-db" >> .env
 echo "POSTGRES_USER=surfaceinterval" >> .env
 echo "POSTGRES_PASSWORD=123" >> .env
+echo "REDIS_URL=redis://127.0.0.1:6379/1" >> .env
 ```
 
 #### 6. Setup and seed database

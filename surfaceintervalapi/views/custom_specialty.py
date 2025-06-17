@@ -22,7 +22,7 @@ class CustomSpecialtyView(ModelViewSet):
             custom_specialty, many=True, context={"request": request}
         )
         cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def list(self, request):
         cache_key = f"user:{request.user.id}:custom_specialties"
@@ -34,7 +34,7 @@ class CustomSpecialtyView(ModelViewSet):
             custom_specialty, many=True, context={"request": request}
         )
         cache_values(cache_key, serializer.data, CACHE_TIME_MINS)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
         diver = Diver.objects.get(user=request.user)
